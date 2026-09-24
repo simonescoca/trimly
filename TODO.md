@@ -78,8 +78,8 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - [x] **T3.4** Protezione per immagini enormi (limiti canvas su iPhone, ecc.)
 
 ### Fase 4 — Motore di ritaglio (logica pura)
-- [ ] **T4.1** Modulo geometria: contenimento, sposta, ridimensiona (libero/proporzionato), massimo rettangolo inscritto, rotazione 90°, specchia, raddrizza + test unitari
-- [ ] **T4.2** Stato dell'editor (reducer) + annulla/ripeti + test unitari
+- [x] **T4.1** Modulo geometria: contenimento, sposta, ridimensiona (libero/proporzionato), massimo rettangolo inscritto, rotazione 90°, specchia, raddrizza + test unitari
+- [x] **T4.2** Stato dell'editor (reducer) + annulla/ripeti + test unitari
 
 ### Fase 5 — Editor interattivo
 - [ ] **T5.1** Stage: immagine trasformata, adattamento allo spazio, zoom (rotella, pizzico, pulsanti), spostamento vista
@@ -204,3 +204,24 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - ✅ Errore di tipi con TypeScript 6 sul buffer dei pixel TIFF. Risolto con un cast, senza copiare i dati.
 - ℹ️ Le 4 task della Fase 3 sono finite in un unico punto di ripristino, perché il codice di caricamento, decodifica e limiti è intrecciato e l'ho testato come un blocco unico.
 - ⚠️ **Aperto (minore):** i TIFF con un orientamento salvato nei metadati (raro, tipico di alcuni scanner) non vengono ruotati automaticamente negli altri browser. Safari li gestisce da solo.
+
+### 24/09/2026 — T4.1 Motore geometrico ✅
+- `src/lib/geometry.ts`: funzioni pure, senza interfaccia, per contenimento nell'immagine ruotata, spostamento (con "scivolamento" lungo i bordi se trascini in diagonale contro un lato), ridimensionamento libero o a proporzioni bloccate (maniglie d'angolo e di lato, dimensione minima, nessun "ribaltamento"), rettangolo più grande possibile per una proporzione, rotazione di 90°, specchiatura e adattamento durante il raddrizzamento.
+- **Scelte di UX codificate nella matematica:**
+  - Cambiando proporzione si mantiene l'**inquadratura**: stesso centro e stessa "quota" del ritaglio massimo. Un ritaglio a tutta immagine resta a tutta immagine (1:1 → 16:9 → 9:16 → 16:9 senza rimpicciolirsi); un ritaglio piccolo sul viso resta sul viso.
+  - Se un ritaglio non ci sta più, prima si **sposta** verso il centro e solo se serve si **rimpicciolisce**.
+  - Seni e coseni sono esatti a 0°/90°/180°/270°, così il ritaglio può appoggiarsi esattamente ai bordi.
+- **Test:** 26 test unitari mirati ✅ più uno **stress test temporaneo di 52.500 operazioni casuali**: 5 semi × 7 angoli, inclusi 44,99° e −0,01°, × 3 proporzioni su un'immagine da 12 MP. Nessun ritaglio è mai uscito dall'immagine e le proporzioni non sono mai cambiate ✅
+- **Scivoloni:**
+  - ✅ Con la prima tolleranza (1 milionesimo di px) i ritagli potevano sforare il bordo di quella quantità. Invisibile, ma impreciso: tolleranza ridotta.
+  - ✅ **Bug vero**, trovato dal test casuale: un ritaglio appoggiato al bordo di un'immagine inclinata, ricalcolato, si spostava di 3×10⁻¹⁵ px e finiva "fuori". Risolto con due tolleranze: la ricerca mira *strettamente dentro*, la validazione accetta un margine un po' più largo. In più c'è una rete di sicurezza: se un risultato non è valido si tiene il ritaglio precedente.
+  - ✅ Per il debug ho lanciato Vitest con la radice del disco come cartella base, e ha iniziato a scandire tutto il filesystem. L'ho fermato e ho rifatto il debug dentro il progetto, con un file temporaneo poi cancellato.
+
+### 24/09/2026 — T4.2 Stato dell'editor e annulla/ripeti ✅
+- `src/state/editor.ts`: un unico "reducer" descrive tutte le modifiche possibili: forma, proporzione (preset, originale, personalizzata, inversione), rotazione, specchiatura, raddrizzamento, arrotondamento, sfondo, bordo, ripristino.
+- **Annulla/ripeti intelligente:** un trascinamento intero o un movimento dello slider vale **un solo passo** di annullamento, non centinaia; le interazioni che non cambiano nulla non vengono registrate; la cronologia tiene al massimo 100 passi e anche "Ripristina" si può annullare.
+- **Raddrizzamento reversibile:** l'app ricorda il ritaglio prima di iniziare a raddrizzare, così tornando a 0° torna esattamente com'era.
+- "Arrotondato" parte come **quadrato** (come avevi chiesto: "quadrato arrotondato"), a meno che tu non abbia già scelto un'altra proporzione. Il cerchio è sempre 1:1.
+- Ruotando di 90° anche la proporzione ruota (16:9 → 9:16), così il ritaglio copre sempre la stessa porzione di foto.
+- **Test:** 19 test unitari ✅ (84 in totale nel progetto) · tipi ✅ · lint ✅
+- Scivoloni: nessuno.
