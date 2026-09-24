@@ -112,7 +112,7 @@ export const en = {
   'toolbar.reset': 'Reset all changes',
 
   'stage.label': 'Image and crop area',
-  'crop.label': 'Crop area: {size}. Drag or use the arrow keys to move it.',
+  'crop.label': 'Crop area: {size}. Drag or use the arrow keys to move it; Alt + arrows to resize.',
   'crop.handle': 'Resize from {edge}',
   'edge.n': 'top',
   'edge.s': 'bottom',

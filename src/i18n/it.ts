@@ -114,7 +114,7 @@ export const it: Messages = {
   'toolbar.reset': 'Annulla tutte le modifiche',
 
   'stage.label': 'Immagine e area di ritaglio',
-  'crop.label': 'Area di ritaglio: {size}. Trascinala o usa le frecce per spostarla.',
+  'crop.label': 'Area di ritaglio: {size}. Trascinala o usa le frecce per spostarla; Alt + frecce per ridimensionarla.',
   'crop.handle': 'Ridimensiona da {edge}',
   'edge.n': 'sopra',
   'edge.s': 'sotto',

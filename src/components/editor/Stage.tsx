@@ -236,7 +236,13 @@ export function Stage({ image, state, dispatch }: Props) {
     if (!m) return
     e.preventDefault()
     dispatch({ type: 'begin' })
-    dispatch({ type: 'crop', crop: moveRect(doc.crop, m[0], m[1], frame) })
+    if (e.altKey) {
+      // Alt + arrows resize from the bottom-right corner (keyboard alternative to the handles).
+      const minSize = Math.max(1, Math.min(MIN_CROP_PX / scale, doc.crop.w, doc.crop.h))
+      dispatch({ type: 'crop', crop: resizeRect(doc.crop, 'se', m[0], m[1], { img: frame, aspect, minSize }) })
+    } else {
+      dispatch({ type: 'crop', crop: moveRect(doc.crop, m[0], m[1], frame) })
+    }
   }
   const onCropKeyUp = (e: KeyboardEvent) => {
     if (e.key.startsWith('Arrow')) dispatch({ type: 'commit' })

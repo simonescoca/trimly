@@ -70,6 +70,16 @@ test('moves the crop with the arrow keys', async ({ page }) => {
   expect(after.y).toBeGreaterThan(before.y)
 })
 
+test('resizes the crop with Alt + arrow keys', async ({ page }) => {
+  await page.getByTestId('crop-box').focus()
+  await page.keyboard.press('Alt+Shift+ArrowLeft')
+  await page.keyboard.press('Alt+Shift+ArrowUp')
+  const r = await cropRect(page)
+  expect(r.x).toBe(-200)
+  expect(r.w).toBeLessThan(400)
+  expect(r.h).toBeLessThan(300)
+})
+
 test('circle: square, round, as big as possible', async ({ page }) => {
   await page.getByRole('radio', { name: 'Circle' }).click()
   const r = await cropRect(page)

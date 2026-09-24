@@ -91,7 +91,7 @@ Durante il trascinamento compaiono la griglia dei terzi e un'etichetta con le di
 | `--border` | #E4E4E9 | #2A2A31 |
 | `--text` | #17171C | #F3F3F5 |
 | `--text-2` | #55555F | #A3A3AE |
-| `--text-3` | #8B8B96 | #6E6E79 |
+| `--text-3` | #6F6F7A | #8E8E99 |
 | `--accent` | #5B4CF0 | #8C80FF |
 | `--accent-contrast` | #FFFFFF | #0D0D10 |
 | `--stage` | #E9E9EE | #08080A |

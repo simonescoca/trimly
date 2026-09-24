@@ -96,7 +96,7 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 
 ### Fase 7 — PWA e rifiniture
 - [x] **T7.1** PWA: manifest, icone, service worker, test offline
-- [ ] **T7.2** Accessibilità: tastiera, focus, etichette ARIA, contrasti, riduzione animazioni
+- [x] **T7.2** Accessibilità: tastiera, focus, etichette ARIA, contrasti, riduzione animazioni
 - [ ] **T7.3** Rifinitura mobile: gesti, safe area iPhone, pannello a schede
 - [ ] **T7.4** Rifinitura visiva: transizioni, stati vuoti, messaggi, scorciatoie
 
@@ -289,3 +289,13 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - Verificato che la pagina "galleria" di sviluppo non finisce nella versione pubblicabile.
 - **Scivoloni:** nessuno.
 - ℹ️ Idea per il futuro, non richiesta: su Android si potrebbe aggiungere "Condividi → Trimly" dalla Galleria (Web Share Target), ma servirebbe un service worker scritto a mano.
+
+### 24/09/2026 — T7.2 Accessibilità ✅
+- Aggiunto **axe** (lo standard di fatto per le verifiche automatiche WCAG) ai test end-to-end. Controlla schermata iniziale ed editor, in **tema chiaro e scuro**, su desktop e su **ogni scheda** mobile, anche con gli avvisi dell'esportazione visibili. Criteri: WCAG 2.0, 2.1 e 2.2, livelli A e AA.
+- **Problemi trovati e corretti:**
+  - **Contrasto insufficiente** del grigio più chiaro (`--text-3`), usato per suggerimenti e titoli delle sezioni: era sotto 4,5:1. Ora #6F6F7A nel tema chiaro e #8E8E99 in quello scuro, entrambi sopra la soglia AA. Aggiornato anche `docs/DESIGN.md`.
+  - **Controllo interattivo annidato:** il pallino "scegli un colore" era un "radio" con dentro un campo colore, e gli screen reader lo annunciano in modo confuso. Ora il controllo è solo il campo colore nativo, con la sua etichetta; il cerchio intorno è solo grafica.
+- **Nuovo:** ridimensionamento **da tastiera** con Alt + frecce (⇧ per passi da 10), l'alternativa alle maniglie per chi non usa mouse o touch. Annunciato nell'etichetta del riquadro.
+- Già presenti dalle fasi precedenti: tutti i pulsanti-icona hanno un nome leggibile, il focus è visibile, i messaggi sono annunciati (`aria-live`), le schede usano `tablist`/`tab`, gli slider sono veri slider, le animazioni si spengono con "riduci movimento" e c'è l'attributo `lang` della pagina.
+- **Test:** unitari 98/98 ✅ · e2e accessibilità 8/8 ✅ · e2e editor con il nuovo test Alt + frecce ✅ (su tutti e 4 i browser).
+- **Scivolone (mio, nel test):** su telefono il pulsante "Colore" sta nella scheda "Stile", e il test lo cercava senza aprirla, andando in timeout. Corretto il test.

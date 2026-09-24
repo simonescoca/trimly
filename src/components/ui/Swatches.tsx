@@ -12,7 +12,7 @@ type Props = {
 export function Swatches({ label, customLabel, colors, value, onChange }: Props) {
   const isPreset = colors.some((c) => c.value.toLowerCase() === value.toLowerCase())
   return (
-    <div className={s.swatches} role="radiogroup" aria-label={label}>
+    <div className={s.swatches} role="group" aria-label={label}>
       {colors.map((c) => (
         <button
           key={c.value}
@@ -26,16 +26,11 @@ export function Swatches({ label, customLabel, colors, value, onChange }: Props)
           onClick={() => onChange(c.value)}
         />
       ))}
-      <label
-        className={`${s.swatch} ${s.swatchCustom}`}
-        title={customLabel}
-        aria-checked={!isPreset}
-        role="radio"
-        style={isPreset ? undefined : { background: value }}
-      >
+      {/* The native colour input is the control; the circle around it is just its look. */}
+      <span className={`${s.swatch} ${s.swatchCustom}`} title={customLabel} data-checked={!isPreset || undefined} style={isPreset ? undefined : { background: value }}>
         {isPreset && <Pipette size={14} aria-hidden />}
         <input type="color" aria-label={customLabel} value={value} onChange={(e) => onChange(e.target.value)} />
-      </label>
+      </span>
     </div>
   )
 }

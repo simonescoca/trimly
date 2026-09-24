@@ -340,7 +340,8 @@
   transform: scale(1.08);
 }
 
-.swatch[aria-checked='true'] {
+.swatch[aria-checked='true'],
+.swatch[data-checked] {
   box-shadow:
     0 0 0 2px var(--surface),
     0 0 0 4px var(--accent);
@@ -352,6 +353,10 @@
   overflow: hidden;
   background: conic-gradient(from 90deg, #ff5e5e, #ffd35e, #5eff8f, #5ed8ff, #8c5eff, #ff5ec8, #ff5e5e);
   color: #fff;
+}
+
+.swatchCustom:focus-within {
+  box-shadow: var(--focus);
 }
 
 .swatchCustom input {
