@@ -102,8 +102,8 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 
 ### Fase 8 — Qualità
 - [x] **T8.1** Suite end-to-end completa su Chromium, WebKit (Safari), Firefox e viewport mobile
-- [ ] **T8.2** Verifica visiva manuale (screenshot desktop/mobile, chiaro/scuro, it/en)
-- [ ] **T8.3** Prestazioni: peso del bundle, immagini grandi, fluidità del trascinamento
+- [x] **T8.2** Verifica visiva manuale (screenshot desktop/mobile, chiaro/scuro, it/en)
+- [x] **T8.3** Prestazioni: peso del bundle, immagini grandi, fluidità del trascinamento
 
 ### Fase 9 — Pubblicazione
 - [ ] **T9.1** Build di produzione + configurazione hosting (header di sicurezza e cache)
@@ -330,3 +330,24 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - **Scivoloni emersi con Firefox:**
   - ✅ Un test trascinava il mouse fino a 2000 px, **fuori dalla finestra**. Firefox non riporta i movimenti oltre il bordo, a differenza di Chrome e Safari, quindi il riquadro si fermava prima. Era un test irrealistico, non un bug: ora il trascinamento arriva all'angolo dell'area immagine.
   - ⚠️ **Parzialmente verificato:** in Firefox un "incolla" simulato da script arriva **senza file**, perché Firefox protegge gli appunti. Quindi l'incolla (⌘V) non è testato automaticamente su Firefox. L'app usa lo standard supportato da Firefox e ho aggiunto una via di riserva (`clipboardData.files`). Va comunque provato a mano: ⌘V con un'immagine copiata, in Firefox.
+
+### 24/09/2026 — T8.2 Verifica visiva ✅
+- Guardate con screenshot tutte le combinazioni principali: desktop chiaro e scuro; telefono verticale a 375 e 320 px; telefono orizzontale; italiano e inglese; tutte e tre le forme; schede Forma, Stile, Ruota, Esporta.
+- **Difetto trovato solo guardando (nessun test lo copriva):** ✅ su telefono **l'anteprima era tagliata in basso**. Il riquadro è alto 132 px, ma l'anteprima veniva disegnata sempre a 160 px con misure fisse. Ora si adatta al riquadro mantenendo le proporzioni. Aggiunto un test che verifica che l'anteprima stia tutta nel riquadro, su tutti i browser.
+
+### 24/09/2026 — T8.3 Prestazioni ✅
+- Nuovo test di prestazioni (`e2e/perf.spec.ts`) con la foto da 18,75 MP (5000×3750). Tetti volutamente larghi, pensati per scoprire peggioramenti e non per misurare la velocità del computer.
+
+| Operazione | Chrome | Safari | Tetto |
+|---|---|---|---|
+| Apertura | 138 ms | 155 ms | < 3 s |
+| Trascinamento del ritaglio (per movimento) | 16,6 ms* | 3,9 ms | < 40 ms |
+| Raddrizzamento (per passo, ridisegna tutto) | 7,1 ms | 6,4 ms | < 80 ms |
+| Esportazione JPG | 99 ms | 126 ms | < 5 s |
+
+\* Chrome sincronizza ogni movimento con lo schermo: 16,6 ms corrispondono a 60 fotogrammi al secondo, cioè fluido.
+
+- Perché è veloce: spostare il ritaglio muove solo un riquadro HTML e l'immagine **non** viene ridisegnata; a schermo si usa la copia ridotta; il file da scaricare è già pronto dalla stima del peso.
+- **Peso dell'app:** codice principale 301 kB (≈97 kB compressi, quasi tutto React). Decoder HEIC (3 MB) e TIFF (105 kB) si scaricano solo se servono. Dalla cache offline ho **tolto le varianti del font per cirillico, greco e vietnamita**, inutili in italiano e inglese: da 30 a 25 file (3.570 → 3.490 KB).
+- **Test finale Fase 8:** unitari 98/98 ✅ · **e2e 277 superati, 28 esclusi di proposito, 0 falliti**, su 5 browser.
+- **Scivoloni:** solo l'anteprima tagliata descritta sopra (T8.2), già risolta.

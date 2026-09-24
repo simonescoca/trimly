@@ -147,6 +147,12 @@ test.describe('with the PNG pattern', () => {
     const middle = await page.getByTestId('preview-canvas').evaluate((c: HTMLCanvasElement) => c.getContext('2d')!.getImageData(c.width / 2, c.height / 2, 1, 1).data[3])
     expect(corner).toBe(0)
     expect(middle).toBe(255)
+    // Fully visible inside its box (not cut off), with its proportions kept.
+    const canvas = (await page.getByTestId('preview-canvas').boundingBox())!
+    const frame = (await page.getByTestId('preview-canvas').locator('..').boundingBox())!
+    expect(canvas.y + canvas.height).toBeLessThanOrEqual(frame.y + frame.height + 0.5)
+    expect(canvas.x + canvas.width).toBeLessThanOrEqual(frame.x + frame.width + 0.5)
+    expect(canvas.width / canvas.height).toBeCloseTo(1, 1)
     await expect(page.getByTestId('export-summary')).toContainText(/≈ [\d.]+ (B|KB)/)
   })
 })

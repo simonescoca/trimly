@@ -7,7 +7,8 @@ import { useI18n } from '../../../i18n/context'
 import { formatBytes, FORMAT_NAME } from '../../../lib/export'
 import s from './panels.module.css'
 
-const BOX = { w: 272, h: 160 }
+/** Rendering size (CSS px); CSS then fits it into the preview box. */
+const BOX = { w: 300, h: 180 }
 
 /** Live thumbnail of the exact result, on a checkerboard so transparency is visible. */
 export function PreviewPanel({ image, doc, exporter }: { image: LoadedImage; doc: Doc; exporter: Exporter }) {
@@ -25,8 +26,6 @@ export function PreviewPanel({ image, doc, exporter }: { image: LoadedImage; doc
       const rendered = renderOutput(image, doc, Math.round(w * dpr), Math.round(h * dpr), false)
       canvas.width = rendered.width
       canvas.height = rendered.height
-      canvas.style.width = `${w}px`
-      canvas.style.height = `${h}px`
       const ctx = canvas.getContext('2d')!
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       ctx.drawImage(rendered, 0, 0)

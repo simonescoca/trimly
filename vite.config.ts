@@ -40,6 +40,8 @@ export default defineConfig({
       workbox: {
         // Everything is cached for offline use, including the HEIC decoder (~3 MB).
         globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2,webmanifest}'],
+        // Italian and English only need the Latin font subsets.
+        globIgnores: ['**/inter-{cyrillic,cyrillic-ext,greek,greek-ext,vietnamese}-*.woff2'],
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
         navigateFallback: 'index.html',
         cleanupOutdatedCaches: true,
