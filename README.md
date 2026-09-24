@@ -11,6 +11,8 @@
 - 💾 **Export:** PNG, JPG or WebP, with a smart default, quality setting, live preview and file-size estimate. Download, copy, or share on phones.
 - 📱 **Everywhere:** desktop and phone (touch, pinch, tabs), light/dark theme, Italian/English, installable PWA that works offline, WCAG 2.2 AA.
 
+**Live:** https://trimly-crop.netlify.app
+
 ## Quick start
 
 ```bash

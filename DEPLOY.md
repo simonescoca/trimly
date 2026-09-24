@@ -2,6 +2,7 @@
 
 > ✅ **Già pubblicato il 24/09/2026:** https://trimly-crop.netlify.app (progetto Netlify `trimly-crop`, caricamento manuale).
 > **Per aggiornarlo:** chiedi a Claude "aggiorna Trimly su Netlify". In alternativa, a mano: `SITE_URL=https://trimly-crop.netlify.app npm run build`, poi comprimi il *contenuto* di `dist` in uno zip e trascinalo nel riquadro "Already built it?" della pagina del progetto su Netlify. Dopo ogni aggiornamento, `npm run e2e:live` verifica il sito online.
+> **Codice su GitHub:** https://github.com/simonescoca/trimly (pubblico). Per la "Strada B" (aggiornamenti automatici) basta collegare questo repository al progetto `trimly-crop` su Netlify.
 > Nelle impostazioni del progetto il badge "Powered by Netlify" è **disattivato**: il suo script viene bloccato dalla nostra policy di sicurezza e generava errori.
 
 Trimly è un sito "statico": una cartella di file, senza server né database da gestire. Per metterlo online serve solo un servizio di hosting gratuito. Ti consiglio **Netlify**: è gratis, ha HTTPS incluso ed è il più semplice.

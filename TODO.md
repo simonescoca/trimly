@@ -114,6 +114,7 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 ### Fase 10 — Chiusura
 - [x] **T10.1** Revisione finale, riepilogo e retrospettiva nel diario
 - [x] **T10.2** Pubblicazione su Netlify e verifica del sito online
+- [x] **T10.3** Codice su GitHub (repository pubblico)
 
 ---
 
@@ -449,3 +450,14 @@ Tutte le 35 task del piano sono completate. Il prossimo passo è la pubblicazion
 - ✅ La casella del badge non si toglieva con il primo clic, perché il clic era finito accanto. L'ho verificata leggendo lo stato reale con JavaScript prima di salvare.
 - ✅ Il manifest dell'app arrivava come `application/octet-stream`. I browser lo accettano lo stesso, ma ora arriva con il tipo corretto `application/manifest+json`.
 - ℹ️ Nuovo comando `npm run e2e:live`: esegue tutti i test sul sito pubblicato, utile dopo ogni aggiornamento.
+
+### 24/09/2026 — T10.3 Codice su GitHub ✅
+**Repository pubblico: https://github.com/simonescoca/trimly**, con tutta la cronologia (22 salvataggi).
+
+- Hai scelto "pubblico". Prima di pubblicare ho controllato l'intera cronologia: **nessuna password, chiave o token**. L'unico dato personale è la tua email nei metadati dei salvataggi, che però è **già pubblica** nei commit del tuo repository `relativity-webapp`: nessuna nuova esposizione.
+- **Come è stato caricato:** con `git push` da terminale, come mi hai suggerito. Git aveva già un accesso a GitHub salvato nel Portachiavi di macOS, verificato provando un tuo repository privato senza leggere alcuna password. Il browser è servito solo a **creare il repository vuoto** (modulo "New repository"), perché GitHub non crea i repository al primo push.
+
+**Scivoloni:**
+- ✅ **Sono partito dalla strada più complicata.** Ho installato lo strumento `gh` e avviato un'autorizzazione OAuth via browser, senza prima verificare se git avesse già un accesso salvato. Me l'hai fatto notare tu, giustamente. L'autorizzazione **non è stata confermata** (il pulsante di GitHub era bloccato perché la scheda era in background), l'ho interrotta, e quindi **nessun permesso è stato concesso**. `gh` resta installato ma non collegato a nessun account.
+- ✅ Una mia prova di connessione SSH ha creato la cartella `~/.ssh`, che prima non esisteva. Ho tolto il file che avevo aggiunto (`known_hosts`) e lasciato il "socket" dell'agente SSH che macOS crea da solo, innocuo.
+- ✅ Con la scheda di Chrome in background la digitazione nei campi del modulo non arrivava. Ho impostato i valori direttamente e li ho ricontrollati prima di creare il repository.
