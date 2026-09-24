@@ -4,7 +4,7 @@
   align-items: center;
   gap: 12px;
   height: calc(var(--header-h) + var(--safe-top));
-  padding: var(--safe-top) 12px 0 16px;
+  padding: var(--safe-top) max(12px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left));
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   position: relative;
@@ -40,15 +40,24 @@
   gap: 6px;
 }
 
+.showNarrow {
+  display: none;
+}
+
 @media (max-width: 520px) {
   .hideNarrow {
     display: none;
+  }
+
+  .showNarrow {
+    display: inline-grid;
   }
 }
 
 /* Narrow phones: when the Download button is in the header, keep just the logo mark. */
 @media (max-width: 400px) {
-  .header:has(:global(#header-slot) > *) .brandText {
+  .header:has(:global(#header-slot) > *) .brandText,
+  .header:has(:global(#header-slot) > *) .lang {
     display: none;
   }
 }

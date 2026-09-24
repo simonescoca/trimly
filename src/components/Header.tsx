@@ -27,11 +27,17 @@ export function Header({ onHome, onNewImage, trailing }: Props) {
       <div className={s.spacer} />
       <div className={s.actions}>
         {onNewImage && (
-          <Button variant="ghost" size="sm" icon={<Plus size={16} />} onClick={onNewImage} className={s.hideNarrow}>
-            {t('header.newImage')}
-          </Button>
+          <>
+            <Button variant="ghost" size="sm" icon={<Plus size={16} />} onClick={onNewImage} className={s.hideNarrow}>
+              {t('header.newImage')}
+            </Button>
+            <IconButton label={t('header.newImage')} onClick={onNewImage} className={s.showNarrow}>
+              <Plus size={20} />
+            </IconButton>
+          </>
         )}
         <Segmented<Locale>
+          className={s.lang}
           compact
           label={t('header.language')}
           value={locale}

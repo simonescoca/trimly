@@ -100,6 +100,14 @@
   --shadow-3: 0 24px 64px rgb(0 0 0 / 0.6), 0 4px 12px rgb(0 0 0 / 0.4);
 }
 
+/* Phones held sideways: narrower side panel. */
+@media (orientation: landscape) and (max-height: 540px) and (max-width: 899px) {
+  :root {
+    --sidebar-w: 272px;
+    --header-h: 48px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   :root {
     --dur: 0ms;

@@ -58,5 +58,23 @@ test.describe('narrow phones', () => {
     await page.getByRole('button', { name: /esempio/ }).click()
     await expect(page.getByTestId('crop-box')).toBeVisible()
     expect(await overflow()).toBeLessThanOrEqual(0)
+    // "New image" is still reachable, as a compact button.
+    await expect(page.getByRole('button', { name: 'Nuova immagine' })).toBeVisible()
+    await expect(page.locator('header').getByRole('button', { name: 'Scarica' })).toBeVisible()
+  })
+})
+
+test.describe('phone held sideways', () => {
+  test.use({ viewport: { width: 844, height: 390 }, hasTouch: true, locale: 'en-US' })
+
+  test('uses the side panel so the picture keeps enough room', async ({ page }) => {
+    await page.goto('/')
+    await page.getByRole('button', { name: /sample/ }).click()
+    await expect(page.getByTestId('crop-box')).toBeVisible()
+    await expect(page.getByRole('tablist')).toHaveCount(0)
+    await expect(page.locator('aside').getByRole('button', { name: 'Download' })).toBeVisible()
+    const stage = (await page.getByTestId('stage-canvas').boundingBox())!
+    expect(stage.height).toBeGreaterThan(300)
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(0)
   })
 })

@@ -97,7 +97,7 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 ### Fase 7 — PWA e rifiniture
 - [x] **T7.1** PWA: manifest, icone, service worker, test offline
 - [x] **T7.2** Accessibilità: tastiera, focus, etichette ARIA, contrasti, riduzione animazioni
-- [ ] **T7.3** Rifinitura mobile: gesti, safe area iPhone, pannello a schede
+- [x] **T7.3** Rifinitura mobile: gesti, safe area iPhone, pannello a schede
 - [ ] **T7.4** Rifinitura visiva: transizioni, stati vuoti, messaggi, scorciatoie
 
 ### Fase 8 — Qualità
@@ -299,3 +299,18 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - Già presenti dalle fasi precedenti: tutti i pulsanti-icona hanno un nome leggibile, il focus è visibile, i messaggi sono annunciati (`aria-live`), le schede usano `tablist`/`tab`, gli slider sono veri slider, le animazioni si spengono con "riduci movimento" e c'è l'attributo `lang` della pagina.
 - **Test:** unitari 98/98 ✅ · e2e accessibilità 8/8 ✅ · e2e editor con il nuovo test Alt + frecce ✅ (su tutti e 4 i browser).
 - **Scivolone (mio, nel test):** su telefono il pulsante "Colore" sta nella scheda "Stile", e il test lo cercava senza aprirla, andando in timeout. Corretto il test.
+
+### 24/09/2026 — T7.3 Rifinitura mobile ✅
+- **"Nuova immagine" su telefono:** sotto i 520 px diventa un pulsante "+" compatto invece di sparire. Per fargli spazio, nell'editor sotto i 400 px il selettore IT/EN si nasconde (resta nella schermata iniziale).
+- **Niente zoom involontario su iPhone:** Safari ingrandisce la pagina quando tocchi un campo con testo sotto i 16 px. Sui dispositivi touch ora i campi sono a 16 px.
+- **Niente ritardo del doppio tocco** sui pulsanti (`touch-action: manipulation`).
+- **Telefono in orizzontale:** con il layout a schede l'area immagine sarebbe stata alta circa 95 px. Ora in orizzontale si usa il pannello laterale, più stretto (272 px), e l'immagine ha più di 300 px di altezza.
+- **Notch in orizzontale:** header, barra delle schede e pannello rispettano i margini di sicurezza laterali.
+- **Test:** unitari 98/98 ✅ · e2e **224 ✅** (17 esclusi di proposito). Nuovi test:
+  - a 320 px c'è il "+" e "Scarica" è visibile senza sbordare;
+  - telefono in orizzontale (844×390): pannello laterale, niente schede, immagine alta più di 300 px, niente scroll orizzontale;
+  - la barra non copre la maniglia in basso.
+
+**Scivoloni:**
+- ✅ **Difetto trovato guardando lo screenshot in orizzontale (e presente anche su desktop):** la barra flottante annulla/zoom copriva la maniglia centrale in basso quando la foto occupa tutta l'altezza (es. foto verticali). Ora l'immagine si inquadra nello spazio *sopra* la barra. Ho aggiunto un test e verificato che **fallisce con il codice vecchio** e passa con quello nuovo, quindi il test protegge davvero da questo errore.
+- ✅ Dopo lo spostamento dell'inquadratura, l'helper che nei test campiona i colori "attorno al centro del canvas" non era più allineato. Ora usa il centro del riquadro di ritaglio.

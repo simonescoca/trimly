@@ -42,7 +42,11 @@ export function Stage({ image, state, dispatch }: Props) {
   // Fit ignores the fine straighten angle so the view doesn't breathe while straightening.
   const bounds = rotatedBounds({ w: state.imageW, h: state.imageH, angle: (doc.rot90 * Math.PI) / 2 })
   const padding = size.w < 600 ? 20 : 44
-  const fit = size.w > 0 ? fitScale(size, bounds, padding) : 1
+  // The floating toolbar sits at the bottom: frame the picture in the area above it,
+  // so no handle ends up hidden underneath.
+  const toolbarSpace = size.w < 600 ? 56 : 64
+  const area: Size = { w: size.w, h: Math.max(1, size.h - toolbarSpace) }
+  const fit = size.w > 0 ? fitScale(area, bounds, padding) : 1
   const scale = fit * view.zoom
   const aspect = aspectOf(doc, state.imageW, state.imageH)
 
@@ -80,10 +84,10 @@ export function Stage({ image, state, dispatch }: Props) {
     ctx.setTransform(1, 0, 0, 1, 0, 0)
     ctx.clearRect(0, 0, w, h)
     const k = scale * dpr
-    ctx.setTransform(k, 0, 0, k, dpr * (size.w / 2 - view.cx * scale), dpr * (size.h / 2 - view.cy * scale))
+    ctx.setTransform(k, 0, 0, k, dpr * (area.w / 2 - view.cx * scale), dpr * (area.h / 2 - view.cy * scale))
     // Use the full-resolution source only when zoomed in beyond the preview's detail.
     drawWorldImage(ctx, image, { rot90, straighten, flipX, flipY }, k > image.previewScale * 1.05)
-  }, [image, rot90, straighten, flipX, flipY, view, scale, size])
+  }, [image, rot90, straighten, flipX, flipY, view, scale, size, area.w, area.h])
 
   // ---------- Pointer interactions ----------
   const local = (e: { clientX: number; clientY: number }): Vec => {
@@ -152,7 +156,7 @@ export function Stage({ image, state, dispatch }: Props) {
     if (it.kind === 'pinch') {
       if (pointers.current.size < 2) return
       const { dist, mid } = pinchInfo()
-      const zoomed = zoomAt(it.view, dist / it.dist, it.mid, size, fit, bounds)
+      const zoomed = zoomAt(it.view, dist / it.dist, it.mid, area, fit, bounds)
       // Then follow the fingers' midpoint.
       const k = fit * zoomed.zoom
       setView(clampView({ ...zoomed, cx: zoomed.cx - (mid.x - it.mid.x) / k, cy: zoomed.cy - (mid.y - it.mid.y) / k }, bounds, fit))
@@ -184,27 +188,30 @@ export function Stage({ image, state, dispatch }: Props) {
   }
 
   // Wheel / trackpad pinch zoom (needs a non-passive listener to stop page zoom).
-  const wheelState = useRef({ view, fit, bounds, size })
+  const wheelState = useRef({ view, fit, bounds, area })
   useEffect(() => {
-    wheelState.current = { view, fit, bounds, size }
+    wheelState.current = { view, fit, bounds, area }
   })
   useEffect(() => {
     const el = rootRef.current
     if (!el) return
     const onWheel = (e: WheelEvent) => {
       e.preventDefault()
-      const { view, fit, bounds, size } = wheelState.current
+      const { view, fit, bounds, area } = wheelState.current
       const lines = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 400 : 1
       const delta = e.deltaY * lines * (e.ctrlKey ? 6 : 1)
       const r = el.getBoundingClientRect()
-      setView(zoomAt(view, Math.pow(WHEEL_STEP, -delta), { x: e.clientX - r.left, y: e.clientY - r.top }, size, fit, bounds))
+      setView(zoomAt(view, Math.pow(WHEEL_STEP, -delta), { x: e.clientX - r.left, y: e.clientY - r.top }, area, fit, bounds))
     }
     el.addEventListener('wheel', onWheel, { passive: false })
     return () => el.removeEventListener('wheel', onWheel)
   }, [])
 
   // ---------- Keyboard ----------
-  const zoomBy = useCallback((factor: number) => setView((v) => zoomAt(v, factor, { x: size.w / 2, y: size.h / 2 }, size, fit, bounds)), [size, fit, bounds])
+  const zoomBy = useCallback(
+    (factor: number) => setView((v) => zoomAt(v, factor, { x: area.w / 2, y: area.h / 2 }, area, fit, bounds)),
+    [area.w, area.h, fit, bounds], // eslint-disable-line react-hooks/exhaustive-deps
+  )
 
   useEffect(() => {
     const onKey = (e: globalThis.KeyboardEvent) => {
@@ -249,7 +256,7 @@ export function Stage({ image, state, dispatch }: Props) {
   }
 
   // ---------- Render ----------
-  const tl = worldToScreen({ x: doc.crop.x, y: doc.crop.y }, view, scale, size)
+  const tl = worldToScreen({ x: doc.crop.x, y: doc.crop.y }, view, scale, area)
   const screenRect = { x: tl.x, y: tl.y, w: doc.crop.w * scale, h: doc.crop.h * scale }
   const sizeLabel = `${Math.round(doc.crop.w)} × ${Math.round(doc.crop.h)}`
   const ringWidth = doc.shape !== 'rect' ? doc.borderWidth * Math.min(screenRect.w, screenRect.h) : 0

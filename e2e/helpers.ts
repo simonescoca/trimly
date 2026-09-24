@@ -56,16 +56,18 @@ export async function pasteFile(page: Page, file: FilePayload) {
   }, file)
 }
 
-/** RGB of the stage canvas at an offset (CSS px) from its centre. */
+/** RGB of the stage canvas at an offset (CSS px) from the centre of the crop box (= the picture at start). */
 export async function stagePixel(page: Page, dx: number, dy: number): Promise<number[]> {
+  const crop = (await page.getByTestId('crop-box').boundingBox())!
   return page.getByTestId('stage-canvas').evaluate(
-    (canvas: HTMLCanvasElement, [dx, dy]) => {
+    (canvas: HTMLCanvasElement, [cx, cy, dx, dy]) => {
+      const r = canvas.getBoundingClientRect()
       const dpr = canvas.width / canvas.clientWidth
-      const x = Math.round((canvas.clientWidth / 2 + dx) * dpr)
-      const y = Math.round((canvas.clientHeight / 2 + dy) * dpr)
+      const x = Math.round((cx - r.left + dx) * dpr)
+      const y = Math.round((cy - r.top + dy) * dpr)
       return Array.from(canvas.getContext('2d')!.getImageData(x, y, 1, 1).data.slice(0, 3))
     },
-    [dx, dy],
+    [crop.x + crop.width / 2, crop.y + crop.height / 2, dx, dy],
   )
 }
 

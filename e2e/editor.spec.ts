@@ -128,6 +128,14 @@ test('rotating turns the picture clockwise', async ({ page, isMobile }) => {
   expectColor(await stagePixel(page, 30, 30), COLORS.green)
 })
 
+test('the floating toolbar never covers the bottom handle', async ({ page, isMobile }) => {
+  await showTool(page, 'Rotate', isMobile)
+  await page.getByRole('button', { name: 'Rotate right' }).click() // portrait: fills the height
+  const handle = (await page.locator('[data-handle="s"]').boundingBox())!
+  const toolbar = (await page.getByRole('toolbar').boundingBox())!
+  expect(handle.y + handle.height / 2).toBeLessThan(toolbar.y)
+})
+
 test('flipping mirrors the picture', async ({ page, isMobile }) => {
   await showTool(page, 'Rotate', isMobile)
   await page.getByRole('button', { name: 'Flip horizontally' }).click()

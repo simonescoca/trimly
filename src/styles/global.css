@@ -40,6 +40,17 @@ textarea {
 
 button {
   cursor: pointer;
+  /* No double-tap-to-zoom delay on phones. */
+  touch-action: manipulation;
+}
+
+/* iOS Safari zooms the page when focusing a field whose text is under 16px. */
+@media (pointer: coarse) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
 }
 
 button:disabled {

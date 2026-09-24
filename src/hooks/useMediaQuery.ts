@@ -12,5 +12,6 @@ export function useMediaQuery(query: string): boolean {
   )
 }
 
-export const DESKTOP_QUERY = '(min-width: 900px)'
+/** Side-panel layout: desktops, and phones held sideways (too short for a bottom panel). */
+export const DESKTOP_QUERY = '(min-width: 900px), (orientation: landscape) and (max-height: 540px) and (min-width: 560px)'
 export const useIsDesktop = () => useMediaQuery(DESKTOP_QUERY)

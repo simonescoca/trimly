@@ -53,7 +53,7 @@
 
 .footer {
   flex: none;
-  padding: 14px 20px calc(16px + var(--safe-bottom));
+  padding: 14px max(20px, env(safe-area-inset-right)) calc(16px + var(--safe-bottom)) 20px;
   border-top: 1px solid var(--border);
   background: var(--surface);
 }
@@ -90,7 +90,7 @@
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: 1fr;
-  padding: 4px 8px calc(4px + var(--safe-bottom));
+  padding: 4px max(8px, env(safe-area-inset-right)) calc(4px + var(--safe-bottom)) max(8px, env(safe-area-inset-left));
   background: var(--surface);
   border-top: 1px solid var(--border);
 }
