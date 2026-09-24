@@ -1,0 +1,107 @@
+/* Design tokens. Light is the default; dark applies when the OS prefers it
+   (unless the user forced light) or when the user forced dark. */
+:root {
+  color-scheme: light;
+  --bg: #f6f6f8;
+  --surface: #ffffff;
+  --surface-2: #f0f0f3;
+  --surface-3: #e6e6eb;
+  --border: #e4e4e9;
+  --border-strong: #cfcfd7;
+  --text: #17171c;
+  --text-2: #55555f;
+  --text-3: #8b8b96;
+  --accent: #5b4cf0;
+  --accent-hover: #4b3ce0;
+  --accent-soft: #eeecfe;
+  --accent-contrast: #ffffff;
+  --danger: #d4344a;
+  --success: #1c9a5a;
+  --stage: #e9e9ee;
+  --stage-dot: rgb(0 0 0 / 0.06);
+  --dim: rgb(10 10 14 / 0.55);
+  --checker-a: #ffffff;
+  --checker-b: #e3e3e8;
+  --focus: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent);
+  --shadow-1: 0 1px 2px rgb(16 16 24 / 0.06), 0 1px 1px rgb(16 16 24 / 0.04);
+  --shadow-2: 0 8px 24px rgb(16 16 24 / 0.1), 0 2px 6px rgb(16 16 24 / 0.06);
+  --shadow-3: 0 24px 64px rgb(16 16 24 / 0.18), 0 4px 12px rgb(16 16 24 / 0.08);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  --font: 'Inter Variable', Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur: 160ms;
+
+  --header-h: 56px;
+  --sidebar-w: 320px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg: #0d0d10;
+    --surface: #16161a;
+    --surface-2: #1e1e23;
+    --surface-3: #27272d;
+    --border: #2a2a31;
+    --border-strong: #3a3a43;
+    --text: #f3f3f5;
+    --text-2: #a3a3ae;
+    --text-3: #6e6e79;
+    --accent: #8c80ff;
+    --accent-hover: #a097ff;
+    --accent-soft: #25224a;
+    --accent-contrast: #0d0d10;
+    --danger: #ff6b7d;
+    --success: #4cd08a;
+    --stage: #08080a;
+    --stage-dot: rgb(255 255 255 / 0.05);
+    --dim: rgb(0 0 0 / 0.62);
+    --checker-a: #2a2a31;
+    --checker-b: #1f1f25;
+    --shadow-1: 0 1px 2px rgb(0 0 0 / 0.4);
+    --shadow-2: 0 8px 24px rgb(0 0 0 / 0.45), 0 2px 6px rgb(0 0 0 / 0.3);
+    --shadow-3: 0 24px 64px rgb(0 0 0 / 0.6), 0 4px 12px rgb(0 0 0 / 0.4);
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0d0d10;
+  --surface: #16161a;
+  --surface-2: #1e1e23;
+  --surface-3: #27272d;
+  --border: #2a2a31;
+  --border-strong: #3a3a43;
+  --text: #f3f3f5;
+  --text-2: #a3a3ae;
+  --text-3: #6e6e79;
+  --accent: #8c80ff;
+  --accent-hover: #a097ff;
+  --accent-soft: #25224a;
+  --accent-contrast: #0d0d10;
+  --danger: #ff6b7d;
+  --success: #4cd08a;
+  --stage: #08080a;
+  --stage-dot: rgb(255 255 255 / 0.05);
+  --dim: rgb(0 0 0 / 0.62);
+  --checker-a: #2a2a31;
+  --checker-b: #1f1f25;
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-2: 0 8px 24px rgb(0 0 0 / 0.45), 0 2px 6px rgb(0 0 0 / 0.3);
+  --shadow-3: 0 24px 64px rgb(0 0 0 / 0.6), 0 4px 12px rgb(0 0 0 / 0.4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur: 0ms;
+  }
+}

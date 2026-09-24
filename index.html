@@ -6,6 +6,15 @@
     <title>Trimly — crop any image</title>
     <meta name="description" content="Crop any image right in your browser: free-form, standard ratios, rounded square and transparent circle. Private: nothing is uploaded." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#f6f6f8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0d0d10" media="(prefers-color-scheme: dark)" />
+    <script>
+      // Apply a forced theme before first paint to avoid a flash of the wrong colours.
+      try {
+        var t = localStorage.getItem('trimly:theme')
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

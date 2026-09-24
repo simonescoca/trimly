@@ -67,7 +67,7 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - [x] **T1.2** Infrastruttura test: Vitest + Playwright, generatore di immagini di prova (JPG/PNG/HEIC/TIFF/EXIF ruotato…), smoke test
 
 ### Fase 2 — Fondamenta dell'interfaccia
-- [ ] **T2.1** Design system: tokens CSS, tema chiaro/scuro + interruttore, font Inter, componenti base (bottone, segmented control, slider, chip, toast)
+- [x] **T2.1** Design system: tokens CSS, tema chiaro/scuro + interruttore, font Inter, componenti base (bottone, segmented control, slider, chip, toast)
 - [ ] **T2.2** Traduzioni it/en con rilevamento automatico e selettore (test: nessuna chiave mancante)
 - [ ] **T2.3** Shell dell'app: header, area di lavoro, pannello laterale (desktop) / pannello a schede (mobile)
 
@@ -148,3 +148,12 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - **Test:** unitari 1/1 ✅ · e2e 4/4 ✅ (l'app si apre su tutti e 4 i profili) · verifica manuale dei formati nel browser integrato: JPG, PNG, WebP, GIF, BMP, AVIF, ICO e SVG si aprono nativamente; il JPG con EXIF viene raddrizzato correttamente (400×300, colori giusti).
 - **Scivolone:** dopo aver iniettato l'orientamento EXIF, `sips` (lo strumento immagini di macOS) diceva "nessun orientamento" e sembrava che il file fosse sbagliato. ✅ Non lo era: i byte sono conformi e il browser applica correttamente la rotazione. È solo `sips` che non legge quel campo in questo caso.
 - **Nota:** come previsto, Chromium non apre da solo **HEIC** e **TIFF**. Conferma che servono i decoder aggiuntivi (T3.3).
+
+### 24/09/2026 — T2.1 Design system ✅
+- `src/styles/tokens.css`: colori, raggi, ombre e font del tema chiaro. Quelli del tema scuro si applicano se il sistema è scuro (a meno che tu non abbia forzato il chiaro) oppure se forzi lo scuro.
+- Uno script minuscolo in `index.html` applica il tema salvato *prima* che la pagina si disegni, così non c'è il "lampo" di colore sbagliato all'avvio.
+- Logica del pulsante tema (`src/lib/theme.ts`): inverte il tema visibile. Se il risultato coincide con quello del dispositivo, l'app torna a seguire il dispositivo, così non resti "bloccato" su una scelta manuale.
+- Componenti base: Button, IconButton, Segmented (con frecce da tastiera), Chip, Slider (doppio clic o Esc per azzerare), Swatches (colori + selettore libero), NumberField (conferma con Invio), Toast.
+- Pagina "galleria" solo per lo sviluppo (`/?gallery`), per controllare a colpo d'occhio tutti i componenti.
+- **Test:** tipi ✅ · lint ✅ · unitari 3/3 ✅ (logica del tema) · verifica visiva nel browser integrato, tema scuro e chiaro ✅
+- **Scivolone:** i messaggi toast risultavano invisibili (opacità 0) nel browser integrato. ✅ Non è un bug dell'app: il pannello del browser era nascosto, e i browser mettono in pausa le animazioni delle pagine non visibili. Il toast c'è ed è posizionato correttamente; lo verificheranno anche i test automatici.
