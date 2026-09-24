@@ -91,7 +91,10 @@ writeFileSync(
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">${svgBody}</svg>`,
 )
 
-// 5. Broken inputs.
+// 5. Large photo (18.75 MP): above the iPhone canvas limit (16.7 MP), below the desktop one.
+sips('jpeg', pattern, join(OUT, 'large.jpg'), ['-z', '3750', '5000', '-s', 'formatOptions', '80'])
+
+// 6. Broken inputs.
 writeFileSync(join(OUT, 'corrupt.jpg'), Buffer.concat([Buffer.from([0xff, 0xd8, 0xff, 0xe0]), Buffer.alloc(200, 7)]))
 writeFileSync(join(OUT, 'not-an-image.txt'), 'hello, I am not an image\n')
 

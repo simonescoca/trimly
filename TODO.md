@@ -72,10 +72,10 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - [x] **T2.3** Shell dell'app: header, area di lavoro, pannello laterale (desktop) / pannello a schede (mobile)
 
 ### Fase 3 — Caricamento immagini
-- [ ] **T3.1** Caricamento: scelta file, trascinamento (con overlay), incolla dagli appunti, immagine di esempio; errori chiari
-- [ ] **T3.2** Decodifica formati nativi + riconoscimento formato dai byte + orientamento EXIF + SVG senza dimensioni
-- [ ] **T3.3** Decoder HEIC/HEIF e TIFF caricati on-demand
-- [ ] **T3.4** Protezione per immagini enormi (limiti canvas su iPhone, ecc.)
+- [x] **T3.1** Caricamento: scelta file, trascinamento (con overlay), incolla dagli appunti, immagine di esempio; errori chiari
+- [x] **T3.2** Decodifica formati nativi + riconoscimento formato dai byte + orientamento EXIF + SVG senza dimensioni
+- [x] **T3.3** Decoder HEIC/HEIF e TIFF caricati on-demand
+- [x] **T3.4** Protezione per immagini enormi (limiti canvas su iPhone, ecc.)
 
 ### Fase 4 — Motore di ritaglio (logica pura)
 - [ ] **T4.1** Modulo geometria: contenimento, sposta, ridimensiona (libero/proporzionato), massimo rettangolo inscritto, rotazione 90°, specchia, raddrizza + test unitari
@@ -173,3 +173,34 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - **Test:** tipi ✅ · lint ✅ · unitari 12/12 ✅ · **e2e 16/16 ✅** su Chrome, Safari, Android e iPhone. Coprono la lingua rilevata dal browser, il cambio lingua che resta dopo il ricaricamento, il tema che segue il sistema, il toggle senza "lampo" al ricaricamento, il ritorno automatico a "segui il sistema" e le azioni della schermata iniziale. Screenshot desktop e mobile controllati nel browser integrato.
 - **Scivolone (piccolo):** il suggerimento diceva "oppure trascinala qui · oppure incollala con ⌘V", con due "oppure" di fila. ✅ Accorciato in "⌘V per incollare".
 - ⚠️ **Aperto:** su telefono l'header è piuttosto pieno (logo + IT/EN + tema + Scarica). Su schermi molto stretti (320 px) potrebbe non starci. Da rifinire nella T7.3.
+
+### 24/09/2026 — T3.1 Caricamento ✅
+- Quattro modi per aprire un'immagine: pulsante (selettore file), **trascinamento** in qualsiasi punto della finestra (con overlay "Rilascia per aprire"), **incolla** (⌘V / Ctrl+V, ignorato mentre scrivi in un campo di testo) e **immagine di esempio**. L'esempio è un paesaggio vettoriale disegnato da me (`src/assets/sample.svg`), quindi niente problemi di licenza.
+- Se arrivano più file si apre il primo che sembra un'immagine, con un avviso. Se durante un caricamento lento ne parte un altro, vince l'ultimo e il precedente viene scartato e liberato dalla memoria.
+- Messaggi d'errore chiari per: file che non è un'immagine, file danneggiato, file vuoto, formato non supportato dal browser, decoder non scaricabile offline.
+- "Nuova immagine" nell'header sostituisce l'immagine; il logo riporta alla schermata iniziale.
+
+### 24/09/2026 — T3.2 Decodifica formati nativi ✅
+- Il formato si riconosce **dai byte**, non dall'estensione (`src/lib/formats.ts`). Un JPG rinominato in .png si apre comunque, e un .txt rinominato in .jpg viene rifiutato con il messaggio giusto.
+- L'orientamento EXIF delle foto viene applicato: una foto verticale scattata col telefono non appare "coricata".
+- **SVG:** si legge la dimensione (width/height in px, pt, cm, mm, in… oppure viewBox) e si disegna a 2048 px sul lato lungo, perché un vettoriale non ha una dimensione in pixel propria.
+- GIF, PNG, WebP e AVIF animati vengono "congelati" al primo fotogramma, così quello che vedi è sempre quello che scarichi.
+- Trasparenza rilevata realmente (non solo dal formato), su una copia piccola dell'immagine. Servirà a scegliere in automatico PNG come formato di uscita.
+- Per fluidità, l'app prepara una copia ridotta (max 2560 px) da mostrare a schermo; l'originale resta intatto per l'esportazione.
+
+### 24/09/2026 — T3.3 Decoder HEIC e TIFF ✅
+- **HEIC** (foto iPhone): Safari li apre da solo; negli altri browser si scarica al volo `heic-to`, nella variante "csp" che non usa `eval` ed è compatibile con header di sicurezza severi. **TIFF:** `utif2`, stesso meccanismo.
+- Verificato nel build: il bundle principale è di 262 kB. Il decoder HEIC (3 MB) e quello TIFF (105 kB) sono file separati, scaricati **solo** se apri quei formati.
+
+### 24/09/2026 — T3.4 Immagini enormi ✅
+- `src/lib/limits.ts`: su iPhone e iPad un canvas non può superare 16,7 megapixel (oltre, l'immagine esce **bianca** senza errori). Su desktop il limite di sicurezza è 64 MP. Le immagini più grandi vengono ridotte al caricamento, mantenendo le proporzioni e mostrando un avviso.
+- La riduzione è "a gradini" (dimezzamenti successivi) per una qualità migliore rispetto a un'unica riduzione brusca.
+
+**Test della Fase 3:** unitari 39/39 ✅ (riconoscimento formati su file veri, lettura delle dimensioni SVG, limiti) · **e2e 104/104 ✅** su 4 browser. Per ogni formato si verifica che dimensione, orientamento e **colori dei 4 quadranti** siano quelli attesi. Coperti anche errori, trascinamento, incolla, più file insieme, esempio, sostituzione e ritorno all'inizio, e la foto da 18,75 MP (ridotta su iPhone, intera su desktop).
+
+**Scivoloni della Fase 3:**
+- ✅ Un carattere invisibile (BOM) era finito letteralmente dentro il codice al posto della sua sequenza di escape, e il lint l'ha segnalato. Rimosso: il decodificatore di testo lo elimina già da solo.
+- ✅ Il build segnalava un file "troppo grande" (>500 kB): è il decoder HEIC, caricato solo su richiesta. Soglia alzata con un commento che spiega il motivo.
+- ✅ Errore di tipi con TypeScript 6 sul buffer dei pixel TIFF. Risolto con un cast, senza copiare i dati.
+- ℹ️ Le 4 task della Fase 3 sono finite in un unico punto di ripristino, perché il codice di caricamento, decodifica e limiti è intrecciato e l'ho testato come un blocco unico.
+- ⚠️ **Aperto (minore):** i TIFF con un orientamento salvato nei metadati (raro, tipico di alcuni scanner) non vengono ruotati automaticamente negli altri browser. Safari li gestisce da solo.
