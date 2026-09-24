@@ -68,7 +68,7 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 
 ### Fase 2 — Fondamenta dell'interfaccia
 - [x] **T2.1** Design system: tokens CSS, tema chiaro/scuro + interruttore, font Inter, componenti base (bottone, segmented control, slider, chip, toast)
-- [ ] **T2.2** Traduzioni it/en con rilevamento automatico e selettore (test: nessuna chiave mancante)
+- [x] **T2.2** Traduzioni it/en con rilevamento automatico e selettore (test: nessuna chiave mancante)
 - [ ] **T2.3** Shell dell'app: header, area di lavoro, pannello laterale (desktop) / pannello a schede (mobile)
 
 ### Fase 3 — Caricamento immagini
@@ -157,3 +157,11 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - Pagina "galleria" solo per lo sviluppo (`/?gallery`), per controllare a colpo d'occhio tutti i componenti.
 - **Test:** tipi ✅ · lint ✅ · unitari 3/3 ✅ (logica del tema) · verifica visiva nel browser integrato, tema scuro e chiaro ✅
 - **Scivolone:** i messaggi toast risultavano invisibili (opacità 0) nel browser integrato. ✅ Non è un bug dell'app: il pannello del browser era nascosto, e i browser mettono in pausa le animazioni delle pagine non visibili. Il toast c'è ed è posizionato correttamente; lo verificheranno anche i test automatici.
+
+### 24/09/2026 — T2.2 Traduzioni it/en ✅
+- Dizionari `src/i18n/en.ts` e `src/i18n/it.ts` con tutti i testi dell'app già previsti (~100 voci): pannelli, errori, suggerimenti, etichette per l'accessibilità.
+- **Garanzia strutturale:** il dizionario italiano è "tipizzato" su quello inglese, quindi se manca una traduzione il progetto non compila nemmeno.
+- Lingua scelta in automatico dalle preferenze del browser: vince la prima lingua supportata nell'ordine di preferenza, altrimenti inglese. La scelta manuale viene ricordata. Aggiornati anche `lang`, titolo e descrizione della pagina.
+- Il selettore IT/EN va nell'header (T2.3).
+- **Test:** unitari 12/12 ✅. Stesse chiavi in entrambe le lingue, nessun testo vuoto, stessi segnaposto (es. `{name}`), rilevamento lingua, sostituzione dei segnaposto.
+- **Scivolone (piccolo):** gli apostrofi erano misti, un po' dritti (') e un po' tipografici (’). ✅ Uniformati a ’ in entrambe le lingue.
