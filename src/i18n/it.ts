@@ -15,7 +15,7 @@ export const it: Messages = {
   'empty.subtitle': 'Forma libera, proporzioni standard, quadrato arrotondato o cerchio trasparente per la foto profilo.',
   'empty.choose': 'Scegli un’immagine',
   'empty.dropHint': 'oppure trascinala qui',
-  'empty.pasteHint': 'oppure incollala con {shortcut}',
+  'empty.pasteHint': '{shortcut} per incollare',
   'empty.formats': 'JPG, PNG, WebP, HEIC, GIF, AVIF, TIFF, BMP, SVG',
   'empty.privacy': 'Le tue immagini non lasciano mai il tuo dispositivo.',
   'empty.sample': 'Prova con un’immagine di esempio',

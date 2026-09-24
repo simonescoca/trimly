@@ -69,7 +69,7 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 ### Fase 2 — Fondamenta dell'interfaccia
 - [x] **T2.1** Design system: tokens CSS, tema chiaro/scuro + interruttore, font Inter, componenti base (bottone, segmented control, slider, chip, toast)
 - [x] **T2.2** Traduzioni it/en con rilevamento automatico e selettore (test: nessuna chiave mancante)
-- [ ] **T2.3** Shell dell'app: header, area di lavoro, pannello laterale (desktop) / pannello a schede (mobile)
+- [x] **T2.3** Shell dell'app: header, area di lavoro, pannello laterale (desktop) / pannello a schede (mobile)
 
 ### Fase 3 — Caricamento immagini
 - [ ] **T3.1** Caricamento: scelta file, trascinamento (con overlay), incolla dagli appunti, immagine di esempio; errori chiari
@@ -165,3 +165,11 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - Il selettore IT/EN va nell'header (T2.3).
 - **Test:** unitari 12/12 ✅. Stesse chiavi in entrambe le lingue, nessun testo vuoto, stessi segnaposto (es. `{name}`), rilevamento lingua, sostituzione dei segnaposto.
 - **Scivolone (piccolo):** gli apostrofi erano misti, un po' dritti (') e un po' tipografici (’). ✅ Uniformati a ’ in entrambe le lingue.
+
+### 24/09/2026 — T2.3 Shell dell'app ✅
+- **Header:** logo (clic = ricomincia), "Nuova immagine", selettore IT/EN, pulsante tema, più uno spazio per un'azione extra (su mobile ci andrà "Scarica").
+- **Schermata iniziale:** scheda centrale con il pulsante principale, suggerimenti per trascinare o incollare (il suggerimento ⌘V si nasconde sui dispositivi touch), le tre caratteristiche chiave, i formati supportati, la nota sulla privacy e "Prova con un'immagine di esempio". Mostra ⌘ su Mac/iPhone e Ctrl su Windows.
+- **Layout dell'editor** (`EditorLayout`): su desktop (≥ 900 px) l'area immagine è a sinistra e il pannello laterale a destra, con "Scarica" sempre in fondo. Su mobile l'area immagine sta in alto, sotto c'è il pannello dello strumento scelto e in fondo la barra a schede (Forma · Ruota · Esporta).
+- **Test:** tipi ✅ · lint ✅ · unitari 12/12 ✅ · **e2e 16/16 ✅** su Chrome, Safari, Android e iPhone. Coprono la lingua rilevata dal browser, il cambio lingua che resta dopo il ricaricamento, il tema che segue il sistema, il toggle senza "lampo" al ricaricamento, il ritorno automatico a "segui il sistema" e le azioni della schermata iniziale. Screenshot desktop e mobile controllati nel browser integrato.
+- **Scivolone (piccolo):** il suggerimento diceva "oppure trascinala qui · oppure incollala con ⌘V", con due "oppure" di fila. ✅ Accorciato in "⌘V per incollare".
+- ⚠️ **Aperto:** su telefono l'header è piuttosto pieno (logo + IT/EN + tema + Scarica). Su schermi molto stretti (320 px) potrebbe non starci. Da rifinire nella T7.3.

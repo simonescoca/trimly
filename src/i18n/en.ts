@@ -13,7 +13,7 @@ export const en = {
   'empty.subtitle': 'Free-form, standard ratios, rounded square or a transparent circle for your profile picture.',
   'empty.choose': 'Choose an image',
   'empty.dropHint': 'or drag it here',
-  'empty.pasteHint': 'or paste it with {shortcut}',
+  'empty.pasteHint': '{shortcut} to paste',
   'empty.formats': 'JPG, PNG, WebP, HEIC, GIF, AVIF, TIFF, BMP, SVG',
   'empty.privacy': 'Your images never leave your device.',
   'empty.sample': 'Try a sample image',

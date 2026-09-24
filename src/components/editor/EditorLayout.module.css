@@ -1,0 +1,113 @@
+/* ---------- Desktop: stage + sidebar ---------- */
+.desktop {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--sidebar-w);
+}
+
+.stageArea {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  background-color: var(--stage);
+  background-image: radial-gradient(var(--stage-dot) 1px, transparent 1px);
+  background-size: 18px 18px;
+  overflow: hidden;
+}
+
+.sidebar {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+}
+
+.sidebarScroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+.section {
+  display: grid;
+  gap: 12px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section:last-child {
+  border-bottom: 0;
+}
+
+.sectionTitle {
+  font-size: 12px;
+  font-weight: 620;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.footer {
+  flex: none;
+  padding: 14px 20px calc(16px + var(--safe-bottom));
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+
+/* ---------- Mobile: stage + panel + tab bar ---------- */
+.mobile {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile .stageArea {
+  flex: 1;
+}
+
+.sheet {
+  flex: none;
+  max-height: 42dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+
+.sheet .section {
+  border-bottom: 0;
+  padding: 16px 16px 14px;
+}
+
+.tabbar {
+  flex: none;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  padding: 4px 8px calc(4px + var(--safe-bottom));
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+
+.tab {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: 8px 4px 6px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text-3);
+  font-size: 11.5px;
+  font-weight: 560;
+  transition: color var(--dur) var(--ease);
+}
+
+.tab[aria-selected='true'] {
+  color: var(--accent);
+}

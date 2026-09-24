@@ -1,5 +1,5 @@
 // Development-only page (open /?gallery) to eyeball the UI kit in both themes.
-import { Circle, Download, RectangleHorizontal, Square, Sun } from 'lucide-react'
+import { Circle, Download, RectangleHorizontal, RotateCw, Shapes, Square, Sun } from 'lucide-react'
 import { useState } from 'react'
 import { useTheme } from '../hooks/useTheme'
 import { Button, IconButton } from '../components/ui/Button'
@@ -9,6 +9,9 @@ import { Segmented } from '../components/ui/Segmented'
 import { Slider } from '../components/ui/Slider'
 import { Swatches } from '../components/ui/Swatches'
 import { ToastProvider, useToast } from '../components/ui/Toast'
+import { EditorLayout } from '../components/editor/EditorLayout'
+import { Header } from '../components/Header'
+import { I18nProvider } from '../i18n/I18nProvider'
 
 function Inner() {
   const { theme, toggle } = useTheme()
@@ -76,10 +79,32 @@ function Inner() {
   )
 }
 
-export default function Gallery() {
+function LayoutDemo() {
+  const box = (label: string) => <div style={{ height: 90, borderRadius: 12, background: 'var(--surface-2)', display: 'grid', placeItems: 'center' }}>{label}</div>
+  const tab = (id: string, icon: React.ReactNode) => ({ id, label: id, icon })
   return (
-    <ToastProvider>
-      <Inner />
-    </ToastProvider>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100dvh' }}>
+      <Header onHome={() => {}} onNewImage={() => {}} trailing={<Button variant="primary" size="sm">Download</Button>} />
+      <EditorLayout
+        stage={<div style={{ display: 'grid', placeItems: 'center', height: '100%' }}>stage</div>}
+        panels={[
+          { id: 'preview', title: 'Preview', tab: tab('Export', <Download size={20} />), content: box('preview') },
+          { id: 'shape', title: 'Shape', tab: tab('Shape', <Shapes size={20} />), content: box('shape') },
+          { id: 'ratio', title: 'Aspect ratio', tab: tab('Shape', <Shapes size={20} />), content: box('ratio') },
+          { id: 'rotate', title: 'Rotate & flip', tab: tab('Rotate', <RotateCw size={20} />), content: box('rotate') },
+          { id: 'export', title: 'Export', tab: tab('Export', <Download size={20} />), content: box('export') },
+        ]}
+        footer={<Button variant="primary" block size="lg">Download</Button>}
+      />
+    </div>
+  )
+}
+
+export default function Gallery() {
+  const page = new URLSearchParams(location.search).get('gallery')
+  return (
+    <I18nProvider>
+      <ToastProvider>{page === 'layout' ? <LayoutDemo /> : <Inner />}</ToastProvider>
+    </I18nProvider>
   )
 }
