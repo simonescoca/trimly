@@ -98,7 +98,7 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - [x] **T7.1** PWA: manifest, icone, service worker, test offline
 - [x] **T7.2** Accessibilità: tastiera, focus, etichette ARIA, contrasti, riduzione animazioni
 - [x] **T7.3** Rifinitura mobile: gesti, safe area iPhone, pannello a schede
-- [ ] **T7.4** Rifinitura visiva: transizioni, stati vuoti, messaggi, scorciatoie
+- [x] **T7.4** Rifinitura visiva: transizioni, stati vuoti, messaggi, scorciatoie
 
 ### Fase 8 — Qualità
 - [ ] **T8.1** Suite end-to-end completa su Chromium, WebKit (Safari), Firefox e viewport mobile
@@ -314,3 +314,12 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 **Scivoloni:**
 - ✅ **Difetto trovato guardando lo screenshot in orizzontale (e presente anche su desktop):** la barra flottante annulla/zoom copriva la maniglia centrale in basso quando la foto occupa tutta l'altezza (es. foto verticali). Ora l'immagine si inquadra nello spazio *sopra* la barra. Ho aggiunto un test e verificato che **fallisce con il codice vecchio** e passa con quello nuovo, quindi il test protegge davvero da questo errore.
 - ✅ Dopo lo spostamento dell'inquadratura, l'helper che nei test campiona i colori "attorno al centro del canvas" non era più allineato. Ora usa il centro del riquadro di ritaglio.
+
+### 24/09/2026 — T7.4 Rifinitura visiva ✅
+- Se apri un'altra immagine mentre sei nell'editor, compare in alto una pillola "Apertura dell'immagine…" / "Conversione immagine HEIC…". Prima non si vedeva nulla finché il caricamento non finiva.
+- Nella schermata iniziale **tutta la scheda** è cliccabile, non solo il pulsante: un bersaglio grande, facile anche col pollice.
+- I suggerimenti dei pulsanti mostrano le scorciatoie, es. "Annulla (⌘Z)" su Mac e "Annulla (Ctrl+Z)" su Windows.
+- Leggera dissolvenza all'apertura dell'editor (disattivata con "riduci movimento").
+- Controllo visivo completo in tema scuro, schermata iniziale ed editor con cerchio su sfondo bianco: tutto leggibile e coerente.
+- **Test:** unitari 98/98 ✅ · e2e 224 ✅ (17 esclusi di proposito).
+- **Scivoloni:** nessuno.

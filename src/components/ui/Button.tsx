@@ -21,13 +21,13 @@ export function Button({ variant = 'secondary', size = 'md', block, icon, classN
 type IconButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & { label: string; pressed?: boolean }
 
 /** Square icon-only button; `label` becomes both the accessible name and the tooltip. */
-export function IconButton({ label, pressed, className, children, ...rest }: IconButtonProps) {
+export function IconButton({ label, pressed, className, children, title, ...rest }: IconButtonProps) {
   return (
     <button
       type="button"
       className={[s.iconButton, className].filter(Boolean).join(' ')}
       aria-label={label}
-      title={label}
+      title={title ?? label}
       aria-pressed={pressed}
       {...rest}
     >

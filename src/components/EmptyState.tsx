@@ -19,7 +19,14 @@ export function EmptyState({ busyMessage, onChoose, onSample }: Props) {
   return (
     <main className={s.wrap}>
       <div className={s.inner}>
-        <section className={s.card} aria-busy={!!busyMessage}>
+        <section
+          className={s.card}
+          aria-busy={!!busyMessage}
+          // The whole card is a big target; the button inside stays the accessible control.
+          onClick={(e) => {
+            if (!busyMessage && !(e.target as HTMLElement).closest('button')) onChoose()
+          }}
+        >
           <div className={s.icon}>
             <ImagePlus size={30} strokeWidth={1.75} />
           </div>

@@ -41,7 +41,9 @@ function Shell() {
     <div className={s.app}>
       <Header onHome={image ? () => replaceImage(null) : undefined} onNewImage={image ? openPicker : undefined} />
       {image ? (
-        <Editor key={image.id} image={image} />
+        <div className={s.fadeIn} key={image.id}>
+          <Editor image={image} />
+        </div>
       ) : (
         <EmptyState busyMessage={busy} onChoose={openPicker} onSample={loadSample} />
       )}
@@ -57,6 +59,12 @@ function Shell() {
           load(files)
         }}
       />
+      {image && busy && (
+        <div className={s.busy} role="status">
+          <span className={s.spinner} aria-hidden />
+          {busy}
+        </div>
+      )}
       {dragging && <DropOverlay />}
     </div>
   )

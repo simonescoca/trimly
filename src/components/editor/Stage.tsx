@@ -27,8 +27,11 @@ const MIN_CROP_PX = 24
 const KNOB_GAIN = 1 / (0.5 + 0.5 / Math.SQRT2)
 const WHEEL_STEP = 1.0015
 
+const MOD = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent) ? '⌘' : 'Ctrl+'
+
 export function Stage({ image, state, dispatch }: Props) {
   const { t } = useI18n()
+  const hint = (label: string, keys: string) => `${label} (${keys})`
   const rootRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [size, setSize] = useState<Size>({ w: 0, h: 0 })
@@ -294,23 +297,23 @@ export function Stage({ image, state, dispatch }: Props) {
         />
       )}
       <div className={s.toolbar} data-toolbar role="toolbar" aria-label={t('toolbar.label')}>
-        <IconButton label={t('toolbar.undo')} disabled={!canUndo(state)} onClick={() => dispatch({ type: 'undo' })}>
+        <IconButton label={t('toolbar.undo')} title={hint(t('toolbar.undo'), `${MOD}Z`)} disabled={!canUndo(state)} onClick={() => dispatch({ type: 'undo' })}>
           <Undo2 size={18} />
         </IconButton>
-        <IconButton label={t('toolbar.redo')} disabled={!canRedo(state)} onClick={() => dispatch({ type: 'redo' })}>
+        <IconButton label={t('toolbar.redo')} title={hint(t('toolbar.redo'), MOD === '⌘' ? '⇧⌘Z' : 'Ctrl+Y')} disabled={!canRedo(state)} onClick={() => dispatch({ type: 'redo' })}>
           <Redo2 size={18} />
         </IconButton>
         <span className={s.sep} />
-        <IconButton label={t('toolbar.zoomOut')} disabled={view.zoom <= 1} onClick={() => zoomBy(0.8)}>
+        <IconButton label={t('toolbar.zoomOut')} title={hint(t('toolbar.zoomOut'), '−')} disabled={view.zoom <= 1} onClick={() => zoomBy(0.8)}>
           <Minus size={18} />
         </IconButton>
         <button type="button" className={`${s.zoomLabel} ${s.hideMobile}`} title={t('toolbar.fit')} onClick={() => setView(FIT_VIEW)}>
           {Math.round(scale * 100)}%
         </button>
-        <IconButton label={t('toolbar.zoomIn')} onClick={() => zoomBy(1.25)}>
+        <IconButton label={t('toolbar.zoomIn')} title={hint(t('toolbar.zoomIn'), '+')} onClick={() => zoomBy(1.25)}>
           <Plus size={18} />
         </IconButton>
-        <IconButton label={t('toolbar.fit')} disabled={view.zoom <= 1} onClick={() => setView(FIT_VIEW)}>
+        <IconButton label={t('toolbar.fit')} title={hint(t('toolbar.fit'), '0')} disabled={view.zoom <= 1} onClick={() => setView(FIT_VIEW)}>
           <Maximize size={17} />
         </IconButton>
         <span className={s.sep} />
