@@ -6,6 +6,7 @@ import { Editor } from './components/editor/Editor'
 import { ToastProvider } from './components/ui/Toast'
 import { useFileDrop } from './hooks/useFileDrop'
 import { useImageLoader } from './hooks/useImageLoader'
+import { useLaunchQueue } from './hooks/useLaunchQueue'
 import { usePasteImage } from './hooks/usePasteImage'
 import { I18nProvider } from './i18n/I18nProvider'
 import type { LoadedImage } from './lib/decode'
@@ -28,6 +29,7 @@ function Shell() {
   const { load, busy } = useImageLoader(replaceImage)
   const dragging = useFileDrop(load)
   usePasteImage(load)
+  useLaunchQueue(load)
 
   const openPicker = () => inputRef.current?.click()
   const loadSample = async () => {

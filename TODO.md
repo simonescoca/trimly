@@ -95,7 +95,7 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - [x] **T6.4** Anteprima dal vivo del risultato (con scacchiera per la trasparenza)
 
 ### Fase 7 — PWA e rifiniture
-- [ ] **T7.1** PWA: manifest, icone, service worker, test offline
+- [x] **T7.1** PWA: manifest, icone, service worker, test offline
 - [ ] **T7.2** Accessibilità: tastiera, focus, etichette ARIA, contrasti, riduzione animazioni
 - [ ] **T7.3** Rifinitura mobile: gesti, safe area iPhone, pannello a schede
 - [ ] **T7.4** Rifinitura visiva: transizioni, stati vuoti, messaggi, scorciatoie
@@ -280,3 +280,12 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - ✅ **Chiuso il problema aperto nella T2.3:** a 320 px il pulsante "Scarica" usciva dallo schermo di 34 px. Su telefoni stretti, quando c'è "Scarica", si mostra solo il logo senza la scritta. Aggiunto un test che verifica che a 320 px non sbordi nulla.
 - ✅ La prima correzione non funzionava: i CSS Modules avevano "rinominato" anche l'ID dello slot (`#header-slot` → `#_header-slot_eygry_1`). Risolto con `:global(...)`. L'ho capito leggendo le regole CSS effettive nel browser.
 - ✅ Il lint ha bloccato uno `setState` dentro un effetto, che causa render a cascata: lo slot dell'header ora si legge all'avvio dell'editor.
+
+### 24/09/2026 — T7.1 PWA (installabile + offline) ✅
+- Icone generate dal logo (`npm run icons`): 64/192/512 px, "maskable" per Android (fondo pieno, perché il sistema ritaglia la forma da sé), apple-touch-icon per iPhone (fondo pieno, altrimenti iOS riempirebbe di nero gli angoli trasparenti) e favicon.ico. Le ho guardate una per una.
+- Manifest: nome, colori, modalità "standalone" (si apre come un'app, senza barra del browser). Con l'app installata su computer (Chrome/Edge) si può fare **"Apri con → Trimly"** su un'immagine (`file_handlers` + `launchQueue`).
+- Service worker che memorizza **tutta l'app, decoder HEIC compreso** (3,57 MB in totale). Dopo la prima visita funziona senza internet, anche con le foto dell'iPhone. Gli aggiornamenti futuri si installano da soli.
+- **Test:** e2e 6/6 ✅ (2 esclusi di proposito). Manifest e tutte le icone raggiungibili su 4 browser. Su Chrome desktop e Android: **si spegne la rete, si ricarica la pagina, l'app si apre e decodifica un HEIC** prendendo il decoder dalla cache offline.
+- Verificato che la pagina "galleria" di sviluppo non finisce nella versione pubblicabile.
+- **Scivoloni:** nessuno.
+- ℹ️ Idea per il futuro, non richiesta: su Android si potrebbe aggiungere "Condividi → Trimly" dalla Galleria (Web Share Target), ma servirebbe un service worker scritto a mano.
