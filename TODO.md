@@ -115,6 +115,7 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - [x] **T10.1** Revisione finale, riepilogo e retrospettiva nel diario
 - [x] **T10.2** Pubblicazione su Netlify e verifica del sito online
 - [x] **T10.3** Codice su GitHub (repository pubblico)
+- [x] **T10.4** Aggiornamenti automatici: GitHub → Netlify
 
 ---
 
@@ -461,3 +462,20 @@ Tutte le 35 task del piano sono completate. Il prossimo passo è la pubblicazion
 - ✅ **Sono partito dalla strada più complicata.** Ho installato lo strumento `gh` e avviato un'autorizzazione OAuth via browser, senza prima verificare se git avesse già un accesso salvato. Me l'hai fatto notare tu, giustamente. L'autorizzazione **non è stata confermata** (il pulsante di GitHub era bloccato perché la scheda era in background), l'ho interrotta, e quindi **nessun permesso è stato concesso**. `gh` resta installato ma non collegato a nessun account.
 - ✅ Una mia prova di connessione SSH ha creato la cartella `~/.ssh`, che prima non esisteva. Ho tolto il file che avevo aggiunto (`known_hosts`) e lasciato il "socket" dell'agente SSH che macOS crea da solo, innocuo.
 - ✅ Con la scheda di Chrome in background la digitazione nei campi del modulo non arrivava. Ho impostato i valori direttamente e li ho ricontrollati prima di creare il repository.
+
+### 24/09/2026 — T10.4 Aggiornamenti automatici GitHub → Netlify ✅
+- Prima di collegare, ho **simulato il build di Netlify**: clone pulito dal repository GitHub, installazione da zero, build con l'indirizzo fornito da Netlify. Funziona, e gli URL delle anteprime social escono completi in automatico.
+- **Collegamento:** Netlify → Project configuration → Link repository → GitHub. L'autorizzazione a GitHub apre un popup fuori dalla mia scheda: l'hai completata tu, concedendo a Netlify l'accesso **solo al repository `trimly`** (accesso minimo). Le impostazioni di build sono state lette da `netlify.toml`.
+- **Primo build da GitHub:** riuscito in 18 s, con 7 regole di header applicate senza errori e file identici a quelli già online. Poi ho verificato con un push vero (`f944492`) che il sito si ripubblica da solo.
+
+**Crediti Netlify (scoperta importante)**
+- Il piano gratuito dà **300 crediti al mese**. **Ogni pubblicazione costa 15 crediti**, e anche il traffico consuma. Stasera: 3 caricamenti manuali (45) più circa 10 di traffico, dovuti soprattutto alla mia suite di test sul sito online (circa 12.500 richieste in una corsa su 5 browser). Restano **245** crediti prima dei build da GitHub.
+- **Contromisure:**
+  1. regola `ignore` in `netlify.toml`: se un push tocca solo documenti, test o impostazioni dell'editor, **Netlify salta il build** e non spende crediti. Verificata prima in locale sulla cronologia reale (sola documentazione → salta; codice o configurazione → costruisce);
+  2. `npm run e2e:live` ora gira solo su Chrome, circa un quinto del traffico;
+  3. in `DEPLOY.md` il consiglio di raggruppare le modifiche in un solo push.
+
+**Scivoloni:**
+- ⚠️→✅ **Ho fatto spendere crediti senza saperlo.** Non avevo controllato il modello a crediti di Netlify prima di caricare tre volte a mano e di lanciare i test sul sito online. Nessun costo in denaro (il piano gratuito non addebita mai nulla), ma circa 55 dei 300 crediti mensili sono andati. Ora c'è la regola che evita build inutili, e l'avviso è nella guida.
+- ✅ Due indirizzi della sezione di fatturazione di Netlify davano "Page not found": il nome interno del team è `simone-scoca`, non `bumsimobum`. L'ho ricavato dal link "Upgrade team".
+- ℹ️ Questo stesso aggiornamento del diario è un push di sola documentazione: **deve essere saltato da Netlify**. È la prova sul campo della regola (esito sotto).
