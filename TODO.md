@@ -101,7 +101,7 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - [x] **T7.4** Rifinitura visiva: transizioni, stati vuoti, messaggi, scorciatoie
 
 ### Fase 8 — Qualità
-- [ ] **T8.1** Suite end-to-end completa su Chromium, WebKit (Safari), Firefox e viewport mobile
+- [x] **T8.1** Suite end-to-end completa su Chromium, WebKit (Safari), Firefox e viewport mobile
 - [ ] **T8.2** Verifica visiva manuale (screenshot desktop/mobile, chiaro/scuro, it/en)
 - [ ] **T8.3** Prestazioni: peso del bundle, immagini grandi, fluidità del trascinamento
 
@@ -323,3 +323,10 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - Controllo visivo completo in tema scuro, schermata iniziale ed editor con cerchio su sfondo bianco: tutto leggibile e coerente.
 - **Test:** unitari 98/98 ✅ · e2e 223 ✅ (17 esclusi di proposito). *(Nella T7.3 avevo scritto per errore 224: corretto.)*
 - **Scivoloni:** nessuno.
+
+### 24/09/2026 — T8.1 Suite completa su 5 browser ✅
+- Aggiunto **Firefox**. Ora ogni test gira su Chrome, Safari (WebKit), Firefox, Android (Pixel 7) e iPhone 15.
+- **Risultato: 275 superati, 25 esclusi di proposito, 0 falliti.** Gli esclusi sono casi che hanno senso solo in certi ambienti: rotella del mouse su telefono, schede su desktop, permessi degli appunti solo su Chrome desktop, test offline solo su Chromium, audit di accessibilità eseguito su Chromium, incolla simulato in Firefox.
+- **Scivoloni emersi con Firefox:**
+  - ✅ Un test trascinava il mouse fino a 2000 px, **fuori dalla finestra**. Firefox non riporta i movimenti oltre il bordo, a differenza di Chrome e Safari, quindi il riquadro si fermava prima. Era un test irrealistico, non un bug: ora il trascinamento arriva all'angolo dell'area immagine.
+  - ⚠️ **Parzialmente verificato:** in Firefox un "incolla" simulato da script arriva **senza file**, perché Firefox protegge gli appunti. Quindi l'incolla (⌘V) non è testato automaticamente su Firefox. L'app usa lo standard supportato da Firefox e ho aggiunto una via di riserva (`clipboardData.files`). Va comunque provato a mano: ⌘V con un'immagine copiata, in Firefox.

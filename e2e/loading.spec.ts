@@ -69,7 +69,9 @@ test('opens only the first image when several are dropped', async ({ page }) => 
   await expect(page.getByText('Only the first image was opened.')).toBeVisible()
 })
 
-test('opens a pasted image', async ({ page }) => {
+test('opens a pasted image', async ({ page, browserName }) => {
+  // Firefox empties the clipboard of script-made paste events, so a real ⌘V can't be simulated there.
+  test.skip(browserName === 'firefox', 'synthetic paste events carry no files in Firefox')
   await pasteFile(page, payload('pattern.webp', 'image/webp'))
   await expectEditorWith(page, '400x300 webp')
 })

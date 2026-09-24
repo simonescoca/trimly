@@ -52,7 +52,10 @@ test('resizes from a corner and from an edge', async ({ page }) => {
 test('moves the crop but never outside the image', async ({ page }) => {
   await drag(page, await center(page, '[data-handle="se"]'), -80, -60)
   const before = await cropRect(page)
-  await drag(page, await center(page, '[data-testid="crop-box"]'), 2000, 2000)
+  // Drag towards the stage's far corner (staying inside the window: browsers don't report beyond it).
+  const from = await center(page, '[data-testid="crop-box"]')
+  const stage = (await page.getByTestId('stage-canvas').boundingBox())!
+  await drag(page, from, stage.x + stage.width - 2 - from.x, stage.y + stage.height - 2 - from.y)
   const after = await cropRect(page)
   expect(after.w).toBe(before.w)
   expect(after.x + after.w).toBeCloseTo(200, 1)
