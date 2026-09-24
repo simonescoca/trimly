@@ -112,7 +112,7 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - [x] **T9.4** `README.md`
 
 ### Fase 10 — Chiusura
-- [ ] **T10.1** Revisione finale, riepilogo e retrospettiva nel diario
+- [x] **T10.1** Revisione finale, riepilogo e retrospettiva nel diario
 
 ---
 
@@ -391,3 +391,44 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - `README.md` in inglese, con un riassunto anche in italiano: cosa fa l'app, avvio rapido, comandi, come funziona dentro (motore geometrico, stato, rendering condiviso, decodifica), struttura delle cartelle, licenze.
 - **Test finale Fase 9:** unitari 98/98 ✅ · **e2e 292 superati, 28 esclusi di proposito, 0 falliti** (5 browser). In più c'è il test sul link alle licenze.
 - **Scivolone (nella guida):** avevo scritto che il decoder HEIC si scarica "la prima volta che apri un HEIC". In realtà il service worker lo scarica in background **alla prima visita**. Frase corretta.
+
+### 24/09/2026 — T10.1 Revisione finale e retrospettiva ✅
+**Ultimi controlli**
+- `npm audit`: **0 vulnerabilità** note, né nelle librerie dell'app né in quelle di sviluppo.
+- Nuovo test di regressione "**una sessione intera senza errori**": esempio → cerchio → rotazione → raddrizzamento → cambio immagine (HEIC) a metà modifica → ritorno all'inizio → di nuovo esempio → download. Fallisce se compare anche un solo errore in console. Superato su tutti e 5 i browser.
+- **Verifica finale:** unitari **98/98** ✅ · end-to-end **297 superati, 28 esclusi di proposito, 0 falliti** su Chrome, Safari, Firefox, Android e iPhone.
+
+**Il progetto in numeri**
+| | |
+|---|---|
+| Punti di ripristino (commit git) | 20 |
+| Codice dell'app | ~3.600 righe TypeScript + ~1.600 righe CSS |
+| Test | ~750 righe unitari + ~900 righe end-to-end |
+| Peso per chi visita | 97 kB compressi di codice principale (+ decoder HEIC/TIFF solo se servono) |
+| Browser verificati automaticamente | 5 (Chrome, Safari, Firefox, Android, iPhone) |
+
+**Retrospettiva: cosa ha funzionato**
+- Scrivere il **motore geometrico come matematica pura**, testata a parte (incluse 52.500 operazioni casuali), ha reso l'interfaccia facile: i bug geometrici sono stati trovati prima di arrivare a schermo.
+- Una **sola funzione di disegno** per schermo ed esportazione: quello che vedi è davvero quello che scarichi. I test lo verificano **decodificando i file scaricati pixel per pixel**.
+- **Immagini di prova "parlanti"** (4 quadranti colorati): ogni errore di rotazione, specchiatura o orientamento EXIF diventa un colore sbagliato, facile da individuare.
+- I test hanno scovato **regressioni vere** che a occhio mi sarebbero sfuggite: la prima scheda sbagliata su telefono, la barra che copriva una maniglia, l'anteprima tagliata, i blocchi su Firefox.
+
+**Retrospettiva: cosa migliorerei**
+- Alcuni problemi di layout mobile li ho trovati solo guardando gli screenshot. Avrei dovuto scrivere prima i test "niente sborda / niente si sovrappone".
+- Due volte ho scritto test con aspettative sbagliate (una misura, un conteggio nel diario). Li ho corretti e segnalati, ma serve più attenzione.
+
+**⚠️ Punti aperti (onestamente)**
+1. **Dispositivi fisici:** tutti i test su telefono usano *emulatori* di Android e iPhone. Dopo la pubblicazione conviene una prova su un iPhone e un Android veri, soprattutto con foto HEIC scattate dal telefono, foto da 48 MP e il pulsante **Condividi**. Quest'ultimo richiede il menu di sistema e non è testabile in automatico.
+2. **Incolla (⌘V) su Firefox:** non verificabile in automatico (vedi T8.1); da provare a mano.
+3. **TIFF con orientamento nei metadati** (raro): ruotato correttamente solo in Safari.
+4. **Licenza LGPL del decoder HEIC:** gestita secondo la prassi (file separato e non modificato, avviso, link al sorgente). Per un uso commerciale importante conviene un parere legale.
+
+**💡 Idee per il futuro (non richieste)**
+- "Condividi → Trimly" dalla Galleria su Android (Web Share Target).
+- Elaborazione di più immagini alla volta ed ellisse (escluse di comune accordo all'inizio).
+- Altre lingue: la struttura delle traduzioni è pronta.
+
+---
+
+## ✅ Sviluppo concluso — 24/09/2026
+Tutte le 27 task del piano sono completate. Il prossimo passo è la pubblicazione: segui **`DEPLOY.md`**.
