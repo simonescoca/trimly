@@ -401,7 +401,7 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 **Il progetto in numeri**
 | | |
 |---|---|
-| Punti di ripristino (commit git) | 20 |
+| Punti di ripristino (commit git) | 21 |
 | Codice dell'app | ~3.600 righe TypeScript + ~1.600 righe CSS |
 | Test | ~750 righe unitari + ~900 righe end-to-end |
 | Peso per chi visita | 97 kB compressi di codice principale (+ decoder HEIC/TIFF solo se servono) |
@@ -431,4 +431,4 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 ---
 
 ## ✅ Sviluppo concluso — 24/09/2026
-Tutte le 27 task del piano sono completate. Il prossimo passo è la pubblicazione: segui **`DEPLOY.md`**.
+Tutte le 35 task del piano sono completate. Il prossimo passo è la pubblicazione: segui **`DEPLOY.md`**.
