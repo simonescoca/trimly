@@ -246,7 +246,7 @@ export function Stage({ image, state, dispatch }: Props) {
   const tl = worldToScreen({ x: doc.crop.x, y: doc.crop.y }, view, scale, size)
   const screenRect = { x: tl.x, y: tl.y, w: doc.crop.w * scale, h: doc.crop.h * scale }
   const sizeLabel = `${Math.round(doc.crop.w)} × ${Math.round(doc.crop.h)}`
-  const ringWidth = doc.shape !== 'rect' || doc.borderWidth > 0 ? doc.borderWidth * Math.min(screenRect.w, screenRect.h) : 0
+  const ringWidth = doc.shape !== 'rect' ? doc.borderWidth * Math.min(screenRect.w, screenRect.h) : 0
 
   return (
     <div

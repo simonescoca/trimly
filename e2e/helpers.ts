@@ -70,8 +70,9 @@ export async function stagePixel(page: Page, dx: number, dy: number): Promise<nu
 }
 
 export function expectColor(actual: number[], expected: readonly number[], tolerance = 40) {
-  const close = actual.every((v, i) => Math.abs(v - expected[i]) <= tolerance)
-  expect(close, `expected rgb(${expected}) but got rgb(${actual})`).toBe(true)
+  // Compare only the channels given (RGB), ignoring alpha when present.
+  const close = expected.every((v, i) => Math.abs(actual[i] - v) <= tolerance)
+  expect(close, `expected rgb(${expected}) but got rgba(${actual})`).toBe(true)
 }
 
 /** Checks the four quadrants of the test pattern around the stage centre. */

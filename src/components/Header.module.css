@@ -45,3 +45,10 @@
     display: none;
   }
 }
+
+/* Narrow phones: when the Download button is in the header, keep just the logo mark. */
+@media (max-width: 400px) {
+  .header:has(:global(#header-slot) > *) .brandText {
+    display: none;
+  }
+}

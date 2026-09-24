@@ -17,9 +17,11 @@ type Props = {
   panels: Panel[]
   /** Desktop only: pinned to the bottom of the sidebar (download area). */
   footer: ReactNode
+  /** Mobile tab order (panel order is the desktop order). */
+  tabOrder: string[]
 }
 
-export function EditorLayout({ stage, panels, footer }: Props) {
+export function EditorLayout({ stage, panels, footer, tabOrder }: Props) {
   const isDesktop = useIsDesktop()
   const visible = panels.filter((p) => !p.hidden)
 
@@ -40,12 +42,15 @@ export function EditorLayout({ stage, panels, footer }: Props) {
       </main>
     )
   }
-  return <MobileLayout stage={stage} panels={visible} />
+  return <MobileLayout stage={stage} panels={visible} tabOrder={tabOrder} />
 }
 
-function MobileLayout({ stage, panels }: { stage: ReactNode; panels: Panel[] }) {
+function MobileLayout({ stage, panels, tabOrder }: { stage: ReactNode; panels: Panel[]; tabOrder: string[] }) {
   const { t } = useI18n()
-  const tabs = panels.map((p) => p.tab).filter((tab, i, all) => all.findIndex((x) => x.id === tab.id) === i)
+  const tabs = panels
+    .map((p) => p.tab)
+    .filter((tab, i, all) => all.findIndex((x) => x.id === tab.id) === i)
+    .sort((a, b) => tabOrder.indexOf(a.id) - tabOrder.indexOf(b.id))
   const [active, setActive] = useState(tabs[0]?.id)
   const current = tabs.some((tab) => tab.id === active) ? active : tabs[0]?.id
 

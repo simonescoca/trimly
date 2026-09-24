@@ -89,10 +89,10 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - [x] **T5.5** Rotazione 90°, raddrizzamento, specchia, sempre rispettando i vincoli
 
 ### Fase 6 — Esportazione
-- [ ] **T6.1** Motore di rendering: ritaglio + trasformazioni + maschera forma + sfondo + bordo + ridimensionamento di qualità
-- [ ] **T6.2** Impostazioni di uscita: formato (scelta automatica intelligente), qualità, dimensione in pixel, peso stimato del file
-- [ ] **T6.3** Scarica · copia negli appunti · condividi (smartphone)
-- [ ] **T6.4** Anteprima dal vivo del risultato (con scacchiera per la trasparenza)
+- [x] **T6.1** Motore di rendering: ritaglio + trasformazioni + maschera forma + sfondo + bordo + ridimensionamento di qualità
+- [x] **T6.2** Impostazioni di uscita: formato (scelta automatica intelligente), qualità, dimensione in pixel, peso stimato del file
+- [x] **T6.3** Scarica · copia negli appunti · condividi (smartphone)
+- [x] **T6.4** Anteprima dal vivo del risultato (con scacchiera per la trasparenza)
 
 ### Fase 7 — PWA e rifiniture
 - [ ] **T7.1** PWA: manifest, icone, service worker, test offline
@@ -172,7 +172,7 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - **Layout dell'editor** (`EditorLayout`): su desktop (≥ 900 px) l'area immagine è a sinistra e il pannello laterale a destra, con "Scarica" sempre in fondo. Su mobile l'area immagine sta in alto, sotto c'è il pannello dello strumento scelto e in fondo la barra a schede (Forma · Ruota · Esporta).
 - **Test:** tipi ✅ · lint ✅ · unitari 12/12 ✅ · **e2e 16/16 ✅** su Chrome, Safari, Android e iPhone. Coprono la lingua rilevata dal browser, il cambio lingua che resta dopo il ricaricamento, il tema che segue il sistema, il toggle senza "lampo" al ricaricamento, il ritorno automatico a "segui il sistema" e le azioni della schermata iniziale. Screenshot desktop e mobile controllati nel browser integrato.
 - **Scivolone (piccolo):** il suggerimento diceva "oppure trascinala qui · oppure incollala con ⌘V", con due "oppure" di fila. ✅ Accorciato in "⌘V per incollare".
-- ⚠️ **Aperto:** su telefono l'header è piuttosto pieno (logo + IT/EN + tema + Scarica). Su schermi molto stretti (320 px) potrebbe non starci. Da rifinire nella T7.3.
+- ~~⚠️ **Aperto:** su telefono l'header è piuttosto pieno (logo + IT/EN + tema + Scarica). Su schermi molto stretti (320 px) potrebbe non starci. Da rifinire nella T7.3.~~ ✅ Risolto nella Fase 6 (vedi sotto).
 
 ### 24/09/2026 — T3.1 Caricamento ✅
 - Quattro modi per aprire un'immagine: pulsante (selettore file), **trascinamento** in qualsiasi punto della finestra (con overlay "Rilascia per aprire"), **incolla** (⌘V / Ctrl+V, ignorato mentre scrivi in un campo di testo) e **immagine di esempio**. L'esempio è un paesaggio vettoriale disegnato da me (`src/assets/sample.svg`), quindi niente problemi di licenza.
@@ -249,3 +249,34 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - ✅ Su telefono la riga delle proporzioni spingeva fuori schermo il pulsante di inversione: nelle griglie CSS gli elementi non si restringono sotto il loro contenuto. Risolto con `min-width: 0`, e aggiunta una sfumatura a destra che fa capire che la riga scorre.
 - ✅ Un mio test sulla vista aveva un'aspettativa sbagliata: il lato che limita era l'altezza, non la larghezza. Corretto il test, il codice era giusto.
 - ℹ️ Nel browser integrato, quando il pannello è nascosto, screenshot e transizioni CSS restano "congelati" e più di una volta hanno mostrato uno stato vecchio. Ho imparato a verificare lo stato reale con JavaScript prima di trarre conclusioni.
+
+### 24/09/2026 — Fase 6: esportazione (T6.1 → T6.4) ✅
+**T6.1 Motore di rendering** (`src/lib/export.ts`). Ritaglio, rotazione e specchiature; poi la maschera della forma (cerchio o arrotondato); poi lo sfondo colorato, se scelto, e infine il bordo, disegnato *all'interno* del bordo della forma e concentrico anche negli angoli arrotondati. Quando l'immagine va rimpicciolita molto, si disegna prima più grande e poi si riduce a gradini, per un risultato più nitido. I bordi del cerchio sono antialiasati, senza scalettature.
+
+**T6.2 Impostazioni.**
+- **Formato consigliato automatico:** PNG se c'è trasparenza (cerchio o arrotondato senza sfondo, oppure un PNG trasparente); JPG per le foto; PNG per la grafica (loghi, screenshot, icone); WebP se l'originale era WebP. Finché non scegli tu, il consiglio segue le modifiche (es. passando al cerchio diventa PNG).
+- WebP compare solo se il browser sa davvero crearlo: Safari, ad esempio, lo "finge" restituendo un PNG.
+- Qualità regolabile per JPG e WebP. Dimensione "Originale" oppure "Personalizzata", con larghezza e altezza collegate e misure rapide 512 / 1080 / 2048 sul lato lungo.
+- Avvisi chiari: ingrandimento oltre l'originale, JPG senza trasparenza (le parti trasparenti diventano bianche), limite del dispositivo.
+- **Peso del file stimato** ("≈ 548 KB"), calcolato quando smetti di trascinare. Il file così preparato viene riusato quando premi Scarica, che quindi è istantaneo.
+
+**T6.3 Azioni.** **Scarica** (nome file: `nomeoriginale-cropped.png`), **Copia immagine** negli appunti e **Condividi**, che su telefono apre il menu di sistema e ad esempio su iPhone permette "Salva immagine" nelle Foto. Copia e Condividi compaiono solo dove il browser li supporta davvero. Su telefono "Scarica" sta nell'header, sempre a portata di pollice.
+
+**T6.4 Anteprima dal vivo.** Miniatura del risultato esatto, su scacchiera per vedere la trasparenza, con dimensioni, formato e peso.
+
+**Test:** unitari 98/98 ✅ · **e2e 197/197 ✅** (7 esclusi di proposito). I nuovi test **scaricano davvero il file** e lo decodificano, poi controllano dimensioni e pixel:
+- immagine intera identica, con i bordi pienamente opachi;
+- cerchio con angoli trasparenti (alfa 0) e centro opaco coi colori giusti;
+- cerchio su sfondo bianco in JPG, con bordo nero di 30 px nel punto previsto;
+- angoli trasparenti dell'arrotondato;
+- rotazione + specchiatura nel file;
+- **ritaglio raddrizzato senza angoli vuoti**;
+- dimensione personalizzata 100×75 e misura rapida 1080, con avviso di ingrandimento;
+- anteprima corretta, JPG di default per le foto, copia negli appunti (su Chrome).
+
+**Scivoloni della Fase 6:**
+- ✅ Il mio helper di test confrontava 4 canali (RGBA) con 3 attesi (RGB), quindi falliva anche con colori identici: "atteso 255,0,0, ottenuto 255,0,0,255". Bug del test, non dell'app.
+- ✅ **Regressione vera, scovata dai test:** aggiungendo l'anteprima in cima ai pannelli, su telefono la prima scheda era diventata "Esporta" invece di "Forma", perché l'ordine delle schede seguiva quello dei pannelli. Ora l'ordine delle schede è esplicito.
+- ✅ **Chiuso il problema aperto nella T2.3:** a 320 px il pulsante "Scarica" usciva dallo schermo di 34 px. Su telefoni stretti, quando c'è "Scarica", si mostra solo il logo senza la scritta. Aggiunto un test che verifica che a 320 px non sbordi nulla.
+- ✅ La prima correzione non funzionava: i CSS Modules avevano "rinominato" anche l'ID dello slot (`#header-slot` → `#_header-slot_eygry_1`). Risolto con `:global(...)`. L'ho capito leggendo le regole CSS effettive nel browser.
+- ✅ Il lint ha bloccato uno `setState` dentro un effetto, che causa render a cascata: lo slot dell'header ora si legge all'avvio dell'editor.

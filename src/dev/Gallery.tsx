@@ -95,6 +95,7 @@ function LayoutDemo() {
           { id: 'export', title: 'Export', tab: tab('Export', <Download size={20} />), content: box('export') },
         ]}
         footer={<Button variant="primary" block size="lg">Download</Button>}
+        tabOrder={['Shape', 'Rotate', 'Export']}
       />
     </div>
   )

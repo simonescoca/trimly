@@ -22,7 +22,7 @@ export function Header({ onHome, onNewImage, trailing }: Props) {
     <header className={s.header}>
       <button type="button" className={s.brand} onClick={onHome} disabled={!onHome} aria-label={onHome ? t('header.home') : undefined}>
         <LogoMark />
-        <span>Trimly</span>
+        <span className={s.brandText}>Trimly</span>
       </button>
       <div className={s.spacer} />
       <div className={s.actions}>
@@ -42,6 +42,8 @@ export function Header({ onHome, onNewImage, trailing }: Props) {
           {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
         </IconButton>
         {trailing}
+        {/* The editor portals its mobile Download button here. */}
+        <div id="header-slot" style={{ display: 'contents' }} />
       </div>
     </header>
   )

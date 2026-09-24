@@ -22,13 +22,16 @@ export function drawWorldImage(ctx: CanvasRenderingContext2D, image: LoadedImage
 /** Corner radius in px for the rounded shape. */
 export const cornerRadius = (w: number, h: number, roundness: number) => (Math.min(w, h) / 2) * (roundness / 100)
 
-/** Adds the outline of `shape` to the current path (no beginPath/fill). */
-export function shapePath(ctx: CanvasRenderingContext2D, shape: Shape, x: number, y: number, w: number, h: number, roundness: number) {
+/**
+ * Adds the outline of `shape` to the current path (no beginPath/fill).
+ * `radius` overrides the corner radius (used to keep a border concentric).
+ */
+export function shapePath(ctx: CanvasRenderingContext2D, shape: Shape, x: number, y: number, w: number, h: number, roundness: number, radius?: number) {
   if (shape === 'circle') {
-    ctx.ellipse(x + w / 2, y + h / 2, w / 2, h / 2, 0, 0, Math.PI * 2)
+    ctx.ellipse(x + w / 2, y + h / 2, Math.max(0, w / 2), Math.max(0, h / 2), 0, 0, Math.PI * 2)
     return
   }
-  const r = shape === 'rounded' ? cornerRadius(w, h, roundness) : 0
+  const r = shape === 'rounded' ? Math.min(radius ?? cornerRadius(w, h, roundness), w / 2, h / 2) : 0
   if (r <= 0) {
     ctx.rect(x, y, w, h)
     return

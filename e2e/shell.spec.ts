@@ -47,3 +47,16 @@ test('the empty state offers the main actions', async ({ page }) => {
   await expect(page.getByRole('button', { name: /sample|esempio/i })).toBeVisible()
   await expect(page.getByText(/never leave your device|non lasciano mai/i)).toBeVisible()
 })
+
+test.describe('narrow phones', () => {
+  test.use({ viewport: { width: 320, height: 640 }, locale: 'it-IT' })
+
+  test('nothing overflows horizontally, before and after opening an image', async ({ page }) => {
+    await page.goto('/')
+    const overflow = () => page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)
+    expect(await overflow()).toBeLessThanOrEqual(0)
+    await page.getByRole('button', { name: /esempio/ }).click()
+    await expect(page.getByTestId('crop-box')).toBeVisible()
+    expect(await overflow()).toBeLessThanOrEqual(0)
+  })
+})
