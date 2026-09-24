@@ -106,7 +106,7 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - [x] **T8.3** Prestazioni: peso del bundle, immagini grandi, fluidità del trascinamento
 
 ### Fase 9 — Pubblicazione
-- [ ] **T9.1** Build di produzione + configurazione hosting (header di sicurezza e cache)
+- [x] **T9.1** Build di produzione + configurazione hosting (header di sicurezza e cache)
 - [ ] **T9.2** SEO e condivisione: meta tag, immagine di anteprima social, favicon
 - [ ] **T9.3** `DEPLOY.md`: guida alla pubblicazione passo-passo per non tecnici
 - [ ] **T9.4** `README.md`
@@ -351,3 +351,20 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - **Peso dell'app:** codice principale 301 kB (≈97 kB compressi, quasi tutto React). Decoder HEIC (3 MB) e TIFF (105 kB) si scaricano solo se servono. Dalla cache offline ho **tolto le varianti del font per cirillico, greco e vietnamita**, inutili in italiano e inglese: da 30 a 25 file (3.570 → 3.490 KB).
 - **Test finale Fase 8:** unitari 98/98 ✅ · **e2e 277 superati, 28 esclusi di proposito, 0 falliti**, su 5 browser.
 - **Scivoloni:** solo l'anteprima tagliata descritta sopra (T8.2), già risolta.
+
+### 24/09/2026 — T9.1 Build di produzione e configurazione hosting ✅
+- `npm run build` produce la cartella **`dist/`**, pronta da pubblicare.
+- **Header di sicurezza** (`hosting.config.ts`, scritti in `dist/_headers`, un file che Netlify e Cloudflare Pages leggono da soli):
+  - **Content Security Policy severa:** il browser esegue solo codice che arriva dal sito stesso. Niente script esterni, niente `eval` (è ammesso solo WebAssembly, per il decoder HEIC), niente stili "inline", nessun inserimento del sito in altre pagine (anti-clickjacking);
+  - più `nosniff`, `no-referrer` e il blocco di fotocamera, microfono e geolocalizzazione, che l'app non usa.
+- **Cache:** i file con nome "firmato" (`/assets/*`) restano in cache un anno; pagina, service worker e manifest si ricontrollano sempre, così gli aggiornamenti arrivano subito.
+- La **stessa configurazione vale per l'anteprima locale**: tutti i test girano con le regole del sito pubblicato.
+- `netlify.toml` (per la pubblicazione collegata a GitHub) e `robots.txt`.
+- Per rispettare la CSP, lo script del tema è passato da "inline" a file (`public/theme-init.js`).
+- **Test:** nuovo test di sicurezza su 5 browser. Percorso completo (esempio, cerchio, HEIC con WebAssembly, TIFF, download) registrando **ogni violazione della CSP: zero**. Suite completa due volte di fila: **282 superati, 28 esclusi di proposito, 0 falliti**.
+
+**Scivoloni:**
+- ✅ Avevo messo `'unsafe-inline'` per gli stili "per sicurezza"; ho provato a toglierlo, i test sono passati, e la policy è ora più severa.
+- ✅ **Timeout casuali su Firefox** (30 s, su test sempre diversi, perfino il caricamento della pagina) comparsi con i nuovi header. Causa: l'header `Cross-Origin-Opener-Policy`, che su Firefox fa cambiare processo alla pagina e confonde lo strumento di test. L'ho **rimosso**: per questa app il beneficio era minimo, perché non apre finestre verso altri siti e non gestisce dati sensibili. Firefox è tornato stabile e più veloce (20 s invece di 40–47 s).
+- ✅ **Test instabile** sull'anteprima: leggeva i pixel prima che l'anteprima si ridisegnasse al fotogramma successivo. Ora attende. Verificato con 60 ripetizioni consecutive, tutte superate.
+- ✅ Vite avvisava di un import senza estensione nel file di configurazione: corretto.

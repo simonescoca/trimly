@@ -1,11 +1,22 @@
 /// <reference types="vitest/config" />
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
+import { SECURITY_HEADERS, headersFile } from './hosting.config.ts'
+
+/** Writes the host's `_headers` file into the build output. */
+const hostingHeaders = (): Plugin => ({
+  name: 'trimly-hosting-headers',
+  apply: 'build',
+  generateBundle() {
+    this.emitFile({ type: 'asset', fileName: '_headers', source: headersFile() })
+  },
+})
 
 export default defineConfig({
   plugins: [
     react(),
+    hostingHeaders(),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'favicon.ico', 'apple-touch-icon-180x180.png'],
@@ -48,6 +59,8 @@ export default defineConfig({
       },
     }),
   ],
+  // `vite preview` serves the build with the same security headers as the live site.
+  preview: { headers: SECURITY_HEADERS },
   build: {
     // The HEIC decoder (~3 MB, WebAssembly inside) is loaded only when a HEIC file is opened.
     chunkSizeWarningLimit: 3200,

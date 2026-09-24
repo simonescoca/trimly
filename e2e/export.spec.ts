@@ -143,10 +143,13 @@ test.describe('with the PNG pattern', () => {
   test('the preview shows the result', async ({ page, isMobile }) => {
     await page.getByRole('radio', { name: 'Circle' }).click()
     await showTool(page, 'Export', isMobile)
-    const corner = await page.getByTestId('preview-canvas').evaluate((c: HTMLCanvasElement) => c.getContext('2d')!.getImageData(1, 1, 1, 1).data[3])
-    const middle = await page.getByTestId('preview-canvas').evaluate((c: HTMLCanvasElement) => c.getContext('2d')!.getImageData(c.width / 2, c.height / 2, 1, 1).data[3])
-    expect(corner).toBe(0)
-    expect(middle).toBe(255)
+    // The preview redraws on the next animation frame: wait for it.
+    const alphaAt = (fx: number, fy: number) =>
+      page
+        .getByTestId('preview-canvas')
+        .evaluate((c: HTMLCanvasElement, [fx, fy]) => c.getContext('2d')!.getImageData(Math.floor(c.width * fx), Math.floor(c.height * fy), 1, 1).data[3], [fx, fy])
+    await expect.poll(() => alphaAt(0.01, 0.01)).toBe(0)
+    await expect.poll(() => alphaAt(0.5, 0.5)).toBe(255)
     // Fully visible inside its box (not cut off), with its proportions kept.
     const canvas = (await page.getByTestId('preview-canvas').boundingBox())!
     const frame = (await page.getByTestId('preview-canvas').locator('..').boundingBox())!
