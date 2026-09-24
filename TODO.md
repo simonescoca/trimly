@@ -478,4 +478,6 @@ Tutte le 35 task del piano sono completate. Il prossimo passo è la pubblicazion
 **Scivoloni:**
 - ⚠️→✅ **Ho fatto spendere crediti senza saperlo.** Non avevo controllato il modello a crediti di Netlify prima di caricare tre volte a mano e di lanciare i test sul sito online. Nessun costo in denaro (il piano gratuito non addebita mai nulla), ma circa 55 dei 300 crediti mensili sono andati. Ora c'è la regola che evita build inutili, e l'avviso è nella guida.
 - ✅ Due indirizzi della sezione di fatturazione di Netlify davano "Page not found": il nome interno del team è `simone-scoca`, non `bumsimobum`. L'ho ricavato dal link "Upgrade team".
-- ℹ️ Questo stesso aggiornamento del diario è un push di sola documentazione: **deve essere saltato da Netlify**. È la prova sul campo della regola (esito sotto).
+- ✅ **Prova sul campo riuscita:** il push di questo aggiornamento del diario (`9a206cf`, solo documentazione) risulta **"Canceled"**, cioè saltato, su Netlify. Quello precedente (`f944492`, configurazione) è stato pubblicato in 13 s.
+- ✅ Leggendo i crediti ho estratto per sbaglio "9 / 300" invece di "244,9 / 300": avevo catturato solo le cifre dopo la virgola. Ricontrollato sul testo esatto.
+- ℹ️ Netlify conteggia i consumi con qualche minuto di ritardo: i 2 build da GitHub (15 crediti ciascuno) non erano ancora conteggiati. Stima dopo il conteggio: **circa 215 crediti** rimasti fino al 23 ottobre.
