@@ -9,3 +9,4 @@ blob-report
 playwright/.cache
 .vite
 *.tsbuildinfo
+trimly-dist.zip

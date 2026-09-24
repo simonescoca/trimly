@@ -38,7 +38,7 @@ export function headersFile(): string {
     block('/index.html', { 'Cache-Control': 'no-cache' }),
     block('/sw.js', { 'Cache-Control': 'no-cache' }),
     block('/registerSW.js', { 'Cache-Control': 'no-cache' }),
-    block('/manifest.webmanifest', { 'Cache-Control': 'no-cache' }),
+    block('/manifest.webmanifest', { 'Cache-Control': 'no-cache', 'Content-Type': 'application/manifest+json' }),
     '',
   ].join('\n\n')
 }

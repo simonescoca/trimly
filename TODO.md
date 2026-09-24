@@ -113,6 +113,7 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 
 ### Fase 10 — Chiusura
 - [x] **T10.1** Revisione finale, riepilogo e retrospettiva nel diario
+- [x] **T10.2** Pubblicazione su Netlify e verifica del sito online
 
 ---
 
@@ -432,3 +433,19 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 
 ## ✅ Sviluppo concluso — 24/09/2026
 Tutte le 35 task del piano sono completate. Il prossimo passo è la pubblicazione: segui **`DEPLOY.md`**.
+
+### 24/09/2026 — T10.2 Pubblicazione su Netlify ✅
+**Il sito è online: https://trimly-crop.netlify.app**
+
+- Mi hai chiesto di pubblicare io dal tuo Chrome, con Netlify già aperto. Ho preparato il pacchetto (`dist` compresso in `trimly-dist.zip`, 1,2 MB) e l'ho caricato nel riquadro "Upload your project files".
+- Il nome del progetto era casuale (`incomparable-youtiao-39297f`). **`trimly` e `trimly-app` erano già presi da altri**, quindi ho scelto `trimly-crop`, che era libero e dice anche cosa fa l'app.
+- Netlify crea i progetti come **privati**: l'ho reso **pubblico** ("Anyone on the internet"), come richiesto.
+- Ho ricostruito l'app con l'indirizzo definitivo, così le anteprime su WhatsApp e social usano l'URL completo, e l'ho ricaricata.
+- **Verifiche sul sito vero:** header di sicurezza attivi (CSP, nosniff, anti-iframe…), cache corretta (asset per un anno, pagina sempre fresca), immagine social, icone, manifest, file delle licenze. Poi l'**intera suite end-to-end eseguita contro il sito pubblicato** (`npm run e2e:live`): **295 superati, 25 esclusi di proposito, 0 falliti**, su 5 browser.
+
+**Scivoloni:**
+- ✅ L'estensione Claude in Chrome all'inizio non era collegata. Ti ho proposto tre strade, hai scelto di ricollegarla, e da lì ho proseguito.
+- ✅ **Sul sito online falliva quello che in locale passava:** i test di accessibilità e quello "sessione senza errori". Causa: **Netlify inserisce da solo uno script** per il badge "Powered by Netlify". La nostra CSP blocca giustamente le sue parti inline, generando errori in console, e il badge rimasto aveva contrasto e dimensioni non accessibili. **Ho disattivato il badge** nelle impostazioni del progetto (è possibile anche sul piano gratuito). Lo script non viene più inserito.
+- ✅ La casella del badge non si toglieva con il primo clic, perché il clic era finito accanto. L'ho verificata leggendo lo stato reale con JavaScript prima di salvare.
+- ✅ Il manifest dell'app arrivava come `application/octet-stream`. I browser lo accettano lo stesso, ma ora arriva con il tipo corretto `application/manifest+json`.
+- ℹ️ Nuovo comando `npm run e2e:live`: esegue tutti i test sul sito pubblicato, utile dopo ogni aggiornamento.
