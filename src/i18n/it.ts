@@ -73,6 +73,10 @@ export const it: Messages = {
   'transform.rotateRight': 'Ruota a destra',
   'transform.flipH': 'Specchia in orizzontale',
   'transform.flipV': 'Specchia in verticale',
+  'transform.rotateLeftShort': 'Sinistra',
+  'transform.rotateRightShort': 'Destra',
+  'transform.flipHShort': 'Orizzontale',
+  'transform.flipVShort': 'Verticale',
   'transform.straighten': 'Raddrizza',
 
   'export.format': 'Formato',

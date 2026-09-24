@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 import { useToast } from '../components/ui/Toast'
-import { useI18n } from '../i18n/I18nProvider'
+import { useI18n } from '../i18n/context'
 import type { MessageKey } from '../i18n'
 import { DecodeError, decodeImage, type LoadedImage } from '../lib/decode'
 import { FORMAT_LABEL, formatFromFileInfo } from '../lib/formats'

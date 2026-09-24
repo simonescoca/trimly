@@ -1,0 +1,294 @@
+.stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.pannable {
+  cursor: grab;
+}
+
+.panning {
+  cursor: grabbing;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ---------- Crop box ---------- */
+.crop {
+  position: absolute;
+  cursor: move;
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.28),
+    0 0 0 100vmax var(--dim),
+    inset 0 0 0 1px rgb(255 255 255 / 0.92);
+  transition: box-shadow var(--dur) var(--ease);
+  will-change: left, top, width, height;
+}
+
+.crop:focus-visible {
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.28),
+    0 0 0 100vmax var(--dim),
+    inset 0 0 0 2px var(--accent);
+}
+
+.circle {
+  border-radius: 50%;
+}
+
+/* Border preview: a ring inside the crop, like in the exported image. */
+.ring {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border-style: solid;
+  pointer-events: none;
+}
+
+/* Rule-of-thirds grid, visible while dragging. */
+.grid {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms var(--ease);
+}
+
+.active .grid {
+  opacity: 1;
+}
+
+.grid i {
+  position: absolute;
+  background: rgb(255 255 255 / 0.55);
+  box-shadow: 0 0 1px rgb(0 0 0 / 0.4);
+}
+
+.grid i:nth-child(1),
+.grid i:nth-child(2) {
+  top: 0;
+  bottom: 0;
+  width: 1px;
+}
+
+.grid i:nth-child(1) {
+  left: 33.333%;
+}
+
+.grid i:nth-child(2) {
+  left: 66.666%;
+}
+
+.grid i:nth-child(3),
+.grid i:nth-child(4) {
+  left: 0;
+  right: 0;
+  height: 1px;
+}
+
+.grid i:nth-child(3) {
+  top: 33.333%;
+}
+
+.grid i:nth-child(4) {
+  top: 66.666%;
+}
+
+/* ---------- Handles ---------- */
+.handle {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  z-index: 2;
+  touch-action: none;
+}
+
+@media (pointer: fine) {
+  .handle {
+    width: 28px;
+    height: 28px;
+    margin: -14px 0 0 -14px;
+  }
+}
+
+.handle::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  filter: drop-shadow(0 0 1.5px rgb(0 0 0 / 0.45));
+}
+
+/* Corner brackets */
+.corner::before {
+  width: 20px;
+  height: 20px;
+  border: 0 solid #fff;
+}
+
+.nw::before {
+  margin: -3px 0 0 -3px;
+  border-width: 3px 0 0 3px;
+  border-top-left-radius: 3px;
+}
+
+.ne::before {
+  margin: -3px 0 0 -17px;
+  border-width: 3px 3px 0 0;
+  border-top-right-radius: 3px;
+}
+
+.sw::before {
+  margin: -17px 0 0 -3px;
+  border-width: 0 0 3px 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.se::before {
+  margin: -17px 0 0 -17px;
+  border-width: 0 3px 3px 0;
+  border-bottom-right-radius: 3px;
+}
+
+/* Edge bars */
+.edge::before {
+  background: #fff;
+  border-radius: 3px;
+}
+
+.n::before,
+.s::before {
+  width: 22px;
+  height: 4px;
+  margin: -2px 0 0 -11px;
+}
+
+.e::before,
+.w::before {
+  width: 4px;
+  height: 22px;
+  margin: -11px 0 0 -2px;
+}
+
+/* Round knobs (circle) */
+.knob::before {
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.35);
+  filter: none;
+}
+
+.handle:focus-visible::before {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.cur-nw,
+.cur-se {
+  cursor: nwse-resize;
+}
+
+.cur-ne,
+.cur-sw {
+  cursor: nesw-resize;
+}
+
+.cur-n,
+.cur-s {
+  cursor: ns-resize;
+}
+
+.cur-e,
+.cur-w {
+  cursor: ew-resize;
+}
+
+/* Size label while interacting */
+.size {
+  position: absolute;
+  z-index: 3;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgb(15 15 20 / 0.78);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translate(-50%, 0);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* ---------- Floating toolbar ---------- */
+.toolbar {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-2);
+  transform: translateX(-50%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  touch-action: manipulation;
+}
+
+.sep {
+  width: 1px;
+  height: 20px;
+  margin: 0 4px;
+  background: var(--border);
+}
+
+.zoomLabel {
+  min-width: 52px;
+  height: 36px;
+  padding: 0 6px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text-2);
+  font-size: 12.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.zoomLabel:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+@media (max-width: 899px) {
+  .toolbar {
+    bottom: 10px;
+  }
+
+  .hideMobile {
+    display: none;
+  }
+}

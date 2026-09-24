@@ -72,7 +72,8 @@
 
 .sheet {
   flex: none;
-  max-height: 42dvh;
+  /* Fixed height: switching tools must not resize the stage (the picture would jump). */
+  height: clamp(168px, 30dvh, 260px);
   overflow-y: auto;
   overscroll-behavior: contain;
   background: var(--surface);
@@ -110,4 +111,9 @@
 
 .tab[aria-selected='true'] {
   color: var(--accent);
+}
+
+/* Grid items don't shrink below their content by default: let long chip rows scroll instead. */
+.section > * {
+  min-width: 0;
 }

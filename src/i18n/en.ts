@@ -71,6 +71,10 @@ export const en = {
   'transform.rotateRight': 'Rotate right',
   'transform.flipH': 'Flip horizontally',
   'transform.flipV': 'Flip vertically',
+  'transform.rotateLeftShort': 'Left',
+  'transform.rotateRightShort': 'Right',
+  'transform.flipHShort': 'Horizontal',
+  'transform.flipVShort': 'Vertical',
   'transform.straighten': 'Straighten',
 
   'export.format': 'Format',

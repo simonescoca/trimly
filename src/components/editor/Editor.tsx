@@ -1,55 +1,54 @@
-import { Download, RotateCw, Shapes } from 'lucide-react'
-import { useEffect, useRef } from 'react'
-import { useI18n } from '../../i18n/I18nProvider'
+import { Download, Palette, RotateCw, Shapes } from 'lucide-react'
+import { useReducer, type ReactNode } from 'react'
+import { useI18n } from '../../i18n/context'
+import type { MessageKey } from '../../i18n'
 import type { LoadedImage } from '../../lib/decode'
+import { editorReducer, initialState } from '../../state/editor'
 import { Button } from '../ui/Button'
-import { EditorLayout } from './EditorLayout'
+import { EditorLayout, type Panel } from './EditorLayout'
+import { RatioPanel } from './panels/RatioPanel'
+import { ShapePanel } from './panels/ShapePanel'
+import { StylePanel } from './panels/StylePanel'
+import { TransformPanel } from './panels/TransformPanel'
+import { Stage } from './Stage'
 
 type Props = { image: LoadedImage }
 
-// T3 placeholder: shows the decoded image. The interactive stage arrives in T5.
 export function Editor({ image }: Props) {
   const { t } = useI18n()
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [state, dispatch] = useReducer(editorReducer, image, (img) => initialState(img.width, img.height))
+  const { doc } = state
 
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const draw = () => {
-      const { clientWidth: cw, clientHeight: ch } = canvas
-      const dpr = window.devicePixelRatio || 1
-      canvas.width = Math.round(cw * dpr)
-      canvas.height = Math.round(ch * dpr)
-      const scale = Math.min((cw - 48) / image.width, (ch - 48) / image.height)
-      const ctx = canvas.getContext('2d')!
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-      ctx.imageSmoothingQuality = 'high'
-      const w = image.width * scale
-      const h = image.height * scale
-      ctx.drawImage(image.preview, (cw - w) / 2, (ch - h) / 2, w, h)
-    }
-    draw()
-    const ro = new ResizeObserver(draw)
-    ro.observe(canvas)
-    return () => ro.disconnect()
-  }, [image])
+  const tab = (id: 'shape' | 'style' | 'transform' | 'export', icon: ReactNode) => ({ id, label: t(`tabs.${id}` as MessageKey), icon })
+  const panels: Panel[] = [
+    { id: 'shape', title: t('panel.shape'), tab: tab('shape', <Shapes size={20} />), content: <ShapePanel doc={doc} dispatch={dispatch} /> },
+    {
+      id: 'ratio',
+      title: t('panel.ratio'),
+      tab: tab('shape', <Shapes size={20} />),
+      content: <RatioPanel doc={doc} dispatch={dispatch} />,
+      hidden: doc.shape === 'circle',
+    },
+    {
+      id: 'style',
+      title: t('panel.style'),
+      tab: tab('style', <Palette size={20} />),
+      content: <StylePanel doc={doc} dispatch={dispatch} outputShortSide={Math.min(doc.crop.w, doc.crop.h)} />,
+      hidden: doc.shape === 'rect',
+    },
+    {
+      id: 'transform',
+      title: t('panel.transform'),
+      tab: tab('transform', <RotateCw size={20} />),
+      content: <TransformPanel doc={doc} dispatch={dispatch} />,
+    },
+    { id: 'export', title: t('panel.export'), tab: tab('export', <Download size={20} />), content: null },
+  ]
 
-  const tab = (id: string, icon: React.ReactNode) => ({ id, label: t(`tabs.${id}` as 'tabs.shape'), icon })
   return (
     <EditorLayout
-      stage={
-        <canvas
-          ref={canvasRef}
-          data-testid="stage-canvas"
-          data-image={`${image.width}x${image.height} ${image.format}${image.hasAlpha ? ' alpha' : ''}`}
-          style={{ width: '100%', height: '100%', display: 'block' }}
-        />
-      }
-      panels={[
-        { id: 'shape', title: t('panel.shape'), tab: tab('shape', <Shapes size={20} />), content: null },
-        { id: 'transform', title: t('panel.transform'), tab: tab('transform', <RotateCw size={20} />), content: null },
-        { id: 'export', title: t('panel.export'), tab: tab('export', <Download size={20} />), content: null },
-      ]}
+      stage={<Stage image={image} state={state} dispatch={dispatch} />}
+      panels={panels}
       footer={
         <Button variant="primary" size="lg" block icon={<Download size={18} />}>
           {t('export.download')}

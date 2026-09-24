@@ -1,5 +1,5 @@
 import { ImageDown } from 'lucide-react'
-import { useI18n } from '../i18n/I18nProvider'
+import { useI18n } from '../i18n/context'
 import s from './DropOverlay.module.css'
 
 export function DropOverlay() {

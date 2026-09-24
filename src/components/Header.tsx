@@ -1,6 +1,6 @@
 import { Moon, Plus, Sun } from 'lucide-react'
 import type { ReactNode } from 'react'
-import { useI18n } from '../i18n/I18nProvider'
+import { useI18n } from '../i18n/context'
 import { LOCALES, type Locale } from '../i18n'
 import { useTheme } from '../hooks/useTheme'
 import { Button, IconButton } from './ui/Button'

@@ -82,11 +82,11 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - [x] **T4.2** Stato dell'editor (reducer) + annulla/ripeti + test unitari
 
 ### Fase 5 — Editor interattivo
-- [ ] **T5.1** Stage: immagine trasformata, adattamento allo spazio, zoom (rotella, pizzico, pulsanti), spostamento vista
-- [ ] **T5.2** Riquadro di ritaglio: sposta e ridimensiona con maniglie, oscuramento esterno, griglia dei terzi, dimensioni in px, tastiera
-- [ ] **T5.3** Forme: rettangolo, arrotondato (con slider), cerchio
-- [ ] **T5.4** Proporzioni: libera, originale, 1:1, 4:5, 3:2, 16:9…, inversione verticale/orizzontale, personalizzata
-- [ ] **T5.5** Rotazione 90°, raddrizzamento, specchia, sempre rispettando i vincoli
+- [x] **T5.1** Stage: immagine trasformata, adattamento allo spazio, zoom (rotella, pizzico, pulsanti), spostamento vista
+- [x] **T5.2** Riquadro di ritaglio: sposta e ridimensiona con maniglie, oscuramento esterno, griglia dei terzi, dimensioni in px, tastiera
+- [x] **T5.3** Forme: rettangolo, arrotondato (con slider), cerchio
+- [x] **T5.4** Proporzioni: libera, originale, 1:1, 4:5, 3:2, 16:9…, inversione verticale/orizzontale, personalizzata
+- [x] **T5.5** Rotazione 90°, raddrizzamento, specchia, sempre rispettando i vincoli
 
 ### Fase 6 — Esportazione
 - [ ] **T6.1** Motore di rendering: ritaglio + trasformazioni + maschera forma + sfondo + bordo + ridimensionamento di qualità
@@ -225,3 +225,27 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - Ruotando di 90° anche la proporzione ruota (16:9 → 9:16), così il ritaglio copre sempre la stessa porzione di foto.
 - **Test:** 19 test unitari ✅ (84 in totale nel progetto) · tipi ✅ · lint ✅
 - Scivoloni: nessuno.
+
+### 24/09/2026 — Fase 5: editor interattivo (T5.1 → T5.5) ✅
+**T5.1 Stage.** L'immagine è disegnata su un canvas con la **stessa funzione** che userà l'esportazione (`src/lib/render.ts`), così lo schermo mostra esattamente quello che scaricherai. Zoom con rotella o pizzico del trackpad (centrato sul puntatore), **pizzico a due dita** su telefono, pulsanti +/−, "adatta allo schermo" e tasti `+` `−` `0`. Da ingrandita la vista si trascina, ma non si può "perdere" l'immagine fuori dallo schermo. A zoom basso lo schermo usa la copia ridotta (fluida); ingrandendo passa da solo all'originale in piena risoluzione.
+
+**T5.2 Riquadro di ritaglio.** Si sposta trascinandolo o con le frecce (⇧ per passi da 10), e si ridimensiona con 4 maniglie d'angolo a "L" più 4 barrette sui lati. Le aree toccabili sono di 44 px su touch e 28 px con il mouse. L'esterno è oscurato, e durante il trascinamento compaiono la griglia dei terzi e un'etichetta con le dimensioni in pixel. Un trascinamento intero vale un solo passo di annullamento.
+
+**T5.3 Forme.** Rettangolo, arrotondato (con slider "Arrotondamento") e cerchio. Il cerchio ha 4 pomelli *sul* cerchio, a 45°: il trascinamento viene amplificato di ~1,17× così il pomello resta sotto il dito. Scegliendo cerchio o arrotondato compare il pannello "Sfondo e bordo", con l'anteprima del bordo direttamente sul riquadro.
+
+**T5.4 Proporzioni.** Libera, Originale, 1:1, 5:4, 4:3, 3:2, 16:9. Il pulsante di inversione le trasforma in 4:5, 3:4, 2:3, 9:16, e su "Libera" gira il riquadro. "Personalizzata" accetta anche decimali con la virgola (es. 3,5 : 4,5 per le fototessere).
+
+**T5.5 Ruota e specchia.** Pulsanti Sinistra, Destra, Orizzontale e Verticale, più lo slider "Raddrizza" (±45°, passi di 0,1°; doppio clic o Esc per tornare a 0).
+
+**Scorciatoie:** ⌘/Ctrl+Z annulla, ⇧⌘Z / Ctrl+Y ripete.
+
+**Test:** unitari 90/90 ✅ (5 nuovi per la vista) · **e2e 156/156 ✅** (+52 per l'editor, 4 esclusi di proposito). I test coprono: ridimensionamento da angolo e da lato, spostamento con blocco ai bordi, frecce, cerchio, arrotondato, preset, inversione e proporzione personalizzata "3,5 : 4,5". Per rotazione e specchiatura si controllano i **colori dei quadranti** sullo schermo. E ancora: raddrizzamento con ritorno esatto al ritaglio originale, annulla/ripeti da pulsanti e tastiera, ripristina, zoom con rotella e pulsanti, pizzico simulato a due dita, schede su telefono. Controlli visivi nel browser integrato su desktop e mobile.
+
+**Scivoloni della Fase 5:**
+- ✅ **Pagina bianca** durante lo sviluppo dopo aver modificato i testi: il ricaricamento a caldo ricreava il "contesto" delle traduzioni e i componenti già montati perdevano il collegamento. Nella versione pubblicata non poteva succedere, ma l'ho risolto alla radice separando il contesto dal provider (`src/i18n/context.ts`).
+- ✅ Da qui è emersa una lacuna: **mancava una rete di sicurezza**. Aggiunto un `ErrorBoundary`: se qualcosa si rompe, invece della pagina bianca compare "Ops, qualcosa si è inceppato" con il pulsante Ricarica.
+- ✅ Le etichette "Specchia in orizzontale/verticale" andavano su 3 righe nei pulsanti. Ora il testo visibile è breve (Orizzontale/Verticale) e il nome completo resta come suggerimento e per gli screen reader.
+- ✅ Su telefono, scegliendo il cerchio il pannello in basso si accorciava, l'area immagine si allungava e l'immagine "saltava". Pannello ad altezza fissa.
+- ✅ Su telefono la riga delle proporzioni spingeva fuori schermo il pulsante di inversione: nelle griglie CSS gli elementi non si restringono sotto il loro contenuto. Risolto con `min-width: 0`, e aggiunta una sfumatura a destra che fa capire che la riga scorre.
+- ✅ Un mio test sulla vista aveva un'aspettativa sbagliata: il lato che limita era l'altezza, non la larghezza. Corretto il test, il codice era giusto.
+- ℹ️ Nel browser integrato, quando il pannello è nascosto, screenshot e transizioni CSS restano "congelati" e più di una volta hanno mostrato uno stato vecchio. Ho imparato a verificare lo stato reale con JavaScript prima di trarre conclusioni.
