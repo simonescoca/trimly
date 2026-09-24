@@ -306,7 +306,7 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - **Niente ritardo del doppio tocco** sui pulsanti (`touch-action: manipulation`).
 - **Telefono in orizzontale:** con il layout a schede l'area immagine sarebbe stata alta circa 95 px. Ora in orizzontale si usa il pannello laterale, più stretto (272 px), e l'immagine ha più di 300 px di altezza.
 - **Notch in orizzontale:** header, barra delle schede e pannello rispettano i margini di sicurezza laterali.
-- **Test:** unitari 98/98 ✅ · e2e **224 ✅** (17 esclusi di proposito). Nuovi test:
+- **Test:** unitari 98/98 ✅ · e2e **223 ✅** (17 esclusi di proposito). Nuovi test:
   - a 320 px c'è il "+" e "Scarica" è visibile senza sbordare;
   - telefono in orizzontale (844×390): pannello laterale, niente schede, immagine alta più di 300 px, niente scroll orizzontale;
   - la barra non copre la maniglia in basso.
@@ -321,5 +321,5 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - I suggerimenti dei pulsanti mostrano le scorciatoie, es. "Annulla (⌘Z)" su Mac e "Annulla (Ctrl+Z)" su Windows.
 - Leggera dissolvenza all'apertura dell'editor (disattivata con "riduci movimento").
 - Controllo visivo completo in tema scuro, schermata iniziale ed editor con cerchio su sfondo bianco: tutto leggibile e coerente.
-- **Test:** unitari 98/98 ✅ · e2e 224 ✅ (17 esclusi di proposito).
+- **Test:** unitari 98/98 ✅ · e2e 223 ✅ (17 esclusi di proposito). *(Nella T7.3 avevo scritto per errore 224: corretto.)*
 - **Scivoloni:** nessuno.
