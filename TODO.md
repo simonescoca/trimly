@@ -64,7 +64,7 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 
 ### Fase 1 — Impostazione progetto
 - [x] **T1.1** Scaffold Vite + React + TypeScript, ESLint, `.gitignore`, git init, script npm
-- [ ] **T1.2** Infrastruttura test: Vitest + Playwright, generatore di immagini di prova (JPG/PNG/HEIC/TIFF/EXIF ruotato…), smoke test
+- [x] **T1.2** Infrastruttura test: Vitest + Playwright, generatore di immagini di prova (JPG/PNG/HEIC/TIFF/EXIF ruotato…), smoke test
 
 ### Fase 2 — Fondamenta dell'interfaccia
 - [ ] **T2.1** Design system: tokens CSS, tema chiaro/scuro + interruttore, font Inter, componenti base (bottone, segmented control, slider, chip, toast)
@@ -140,3 +140,11 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - Creati `package.json`, le configurazioni di TypeScript, Vite ed ESLint, `.gitignore`, `index.html`, il primo favicon e l'avvio React. Inizializzato git.
 - **Test:** controllo tipi ✅ · lint ✅ · build ✅ (219 kB, 68 kB compressi) · pagina aperta nel browser integrato, mostra "Trimly" ✅
 - **Scivolone:** avevo installato TypeScript 7 (l'ultima versione), ma lo strumento di lint (typescript-eslint) supporta solo fino alla 6.0. ✅ Risolto fissando TypeScript a `~6.0.3`, trovato controllando le dipendenze *prima* di scrivere codice.
+
+### 24/09/2026 — T1.2 Infrastruttura di test ✅
+- **Vitest** per i test della logica e **Playwright** per i test nei browser veri, su 4 profili: Chrome desktop, Safari desktop (WebKit), Android (Pixel 7) e iPhone 15.
+- I test end-to-end girano sulla **build di produzione**, non su quella di sviluppo, così verifichiamo esattamente ciò che verrà pubblicato.
+- Nuovo script `npm run fixtures` (`scripts/make-fixtures.mjs`). Genera le immagini di prova: un motivo 400×300 a 4 quadranti colorati (rosso, verde, blu, giallo) in PNG, JPG, HEIC, TIFF, BMP, GIF, AVIF, WebP e ICO. In più: un PNG con trasparenza, un JPG con rotazione EXIF, due SVG (con e senza dimensioni), un file corrotto e un file che non è un'immagine. I colori dei quadranti permettono ai test di controllare posizione, rotazione e specchiature.
+- **Test:** unitari 1/1 ✅ · e2e 4/4 ✅ (l'app si apre su tutti e 4 i profili) · verifica manuale dei formati nel browser integrato: JPG, PNG, WebP, GIF, BMP, AVIF, ICO e SVG si aprono nativamente; il JPG con EXIF viene raddrizzato correttamente (400×300, colori giusti).
+- **Scivolone:** dopo aver iniettato l'orientamento EXIF, `sips` (lo strumento immagini di macOS) diceva "nessun orientamento" e sembrava che il file fosse sbagliato. ✅ Non lo era: i byte sono conformi e il browser applica correttamente la rotazione. È solo `sips` che non legge quel campo in questo caso.
+- **Nota:** come previsto, Chromium non apre da solo **HEIC** e **TIFF**. Conferma che servono i decoder aggiuntivi (T3.3).
