@@ -31,3 +31,16 @@ test('works offline after the first visit, HEIC included', async ({ page, contex
   await expectEditorWith(page, '400x300 heic')
   await context.setOffline(false)
 })
+
+test('shares nicely: social preview tags and image', async ({ page, request }) => {
+  await page.goto('/')
+  const og = (p: string) => page.locator(`meta[property="og:${p}"]`).getAttribute('content')
+  expect(await og('title')).toContain('Trimly')
+  const image = (await og('image'))!
+  expect(image).toMatch(/og-image\.jpg$/)
+  const res = await request.get(image.startsWith('http') ? new URL(image).pathname : image)
+  expect(res.status()).toBe(200)
+  expect(res.headers()['content-type']).toContain('image/jpeg')
+  expect((await res.body()).length).toBeLessThan(300_000) // WhatsApp skips bigger previews
+  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image')
+})

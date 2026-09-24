@@ -107,7 +107,7 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 
 ### Fase 9 — Pubblicazione
 - [x] **T9.1** Build di produzione + configurazione hosting (header di sicurezza e cache)
-- [ ] **T9.2** SEO e condivisione: meta tag, immagine di anteprima social, favicon
+- [x] **T9.2** SEO e condivisione: meta tag, immagine di anteprima social, favicon
 - [ ] **T9.3** `DEPLOY.md`: guida alla pubblicazione passo-passo per non tecnici
 - [ ] **T9.4** `README.md`
 
@@ -368,3 +368,12 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - ✅ **Timeout casuali su Firefox** (30 s, su test sempre diversi, perfino il caricamento della pagina) comparsi con i nuovi header. Causa: l'header `Cross-Origin-Opener-Policy`, che su Firefox fa cambiare processo alla pagina e confonde lo strumento di test. L'ho **rimosso**: per questa app il beneficio era minimo, perché non apre finestre verso altri siti e non gestisce dati sensibili. Firefox è tornato stabile e più veloce (20 s invece di 40–47 s).
 - ✅ **Test instabile** sull'anteprima: leggeva i pixel prima che l'anteprima si ridisegnasse al fotogramma successivo. Ora attende. Verificato con 60 ripetizioni consecutive, tutte superate.
 - ✅ Vite avvisava di un import senza estensione nel file di configurazione: corretto.
+
+### 24/09/2026 — T9.2 SEO e anteprima social ✅
+- **Immagine di anteprima** per quando qualcuno condivide il link (WhatsApp, Telegram, social, email): `public/og-image.jpg`, 1200×630, generata da `npm run og-image` con logo, slogan, tre "pillole" (Private · Free · Works offline) e il paesaggio di esempio ritagliato a cerchio e a quadrato arrotondato.
+- Meta tag Open Graph e Twitter, `robots.txt`, e un messaggio `<noscript>` in italiano e inglese.
+- **Indirizzo completo automatico:** i social vogliono l'URL intero dell'immagine. Durante il build si usa l'indirizzo del sito se è noto: su Netlify arriva da solo, altrimenti si imposta `SITE_URL`. Verificato: con l'indirizzo compaiono anche `canonical` e `og:url`; senza, restano i percorsi relativi.
+- **Test:** nuovo test su 5 browser. Controlla i meta tag e che l'immagine sia raggiungibile, sia un JPG e pesi **meno di 300 KB**.
+- **Scivoloni:**
+  - ✅ La prima versione dell'immagine era un PNG da **412 KB**, oltre i ~300 KB oltre cui WhatsApp tende a non mostrare l'anteprima. Rifatta in JPG: **65 KB**, senza differenze visibili.
+  - ✅ Il lint non riconosceva `document` nello script dell'immagine: è codice eseguito dentro il browser. Dichiarato con un commento.

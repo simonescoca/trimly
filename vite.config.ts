@@ -4,6 +4,21 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 import { SECURITY_HEADERS, headersFile } from './hosting.config.ts'
 
+/**
+ * Social networks need absolute URLs for the preview image. The site address comes from
+ * SITE_URL, or from what Netlify (URL) / Cloudflare Pages (CF_PAGES_URL) provide at build time.
+ */
+const siteUrl = (process.env.SITE_URL || process.env.URL || process.env.CF_PAGES_URL || '').replace(/\/$/, '')
+const absoluteSocialUrls = (): Plugin => ({
+  name: 'trimly-social-urls',
+  transformIndexHtml(html) {
+    if (!siteUrl) return html
+    return html
+      .replace('content="/og-image.jpg"', `content="${siteUrl}/og-image.jpg"`)
+      .replace('<meta property="og:type"', `<link rel="canonical" href="${siteUrl}/" />\n    <meta property="og:url" content="${siteUrl}/" />\n    <meta property="og:type"`)
+  },
+})
+
 /** Writes the host's `_headers` file into the build output. */
 const hostingHeaders = (): Plugin => ({
   name: 'trimly-hosting-headers',
@@ -17,6 +32,7 @@ export default defineConfig({
   plugins: [
     react(),
     hostingHeaders(),
+    absoluteSocialUrls(),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'favicon.ico', 'apple-touch-icon-180x180.png'],
