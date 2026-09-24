@@ -17,6 +17,7 @@ export const en = {
   'empty.formats': 'JPG, PNG, WebP, HEIC, GIF, AVIF, TIFF, BMP, SVG',
   'empty.privacy': 'Your images never leave your device.',
   'empty.sample': 'Try a sample image',
+  'empty.licenses': 'Open-source licences',
   'empty.feature.free': 'Free-form',
   'empty.feature.ratios': 'Standard ratios',
   'empty.feature.circle': 'Transparent circle',

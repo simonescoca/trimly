@@ -108,8 +108,8 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 ### Fase 9 — Pubblicazione
 - [x] **T9.1** Build di produzione + configurazione hosting (header di sicurezza e cache)
 - [x] **T9.2** SEO e condivisione: meta tag, immagine di anteprima social, favicon
-- [ ] **T9.3** `DEPLOY.md`: guida alla pubblicazione passo-passo per non tecnici
-- [ ] **T9.4** `README.md`
+- [x] **T9.3** `DEPLOY.md`: guida alla pubblicazione passo-passo per non tecnici
+- [x] **T9.4** `README.md`
 
 ### Fase 10 — Chiusura
 - [ ] **T10.1** Revisione finale, riepilogo e retrospettiva nel diario
@@ -377,3 +377,17 @@ Questo file è la guida del progetto e insieme il suo diario di viaggio. Dentro 
 - **Scivoloni:**
   - ✅ La prima versione dell'immagine era un PNG da **412 KB**, oltre i ~300 KB oltre cui WhatsApp tende a non mostrare l'anteprima. Rifatta in JPG: **65 KB**, senza differenze visibili.
   - ✅ Il lint non riconosceva `document` nello script dell'immagine: è codice eseguito dentro il browser. Dichiarato con un commento.
+
+### 24/09/2026 — T9.3 Guida alla pubblicazione ✅
+- `DEPLOY.md`, in italiano e senza gergo:
+  - **Strada A:** trascina la cartella `dist` su Netlify Drop, 10 minuti;
+  - **Strada B:** GitHub + Netlify, con aggiornamenti automatici;
+  - alternative (Cloudflare Pages, GitHub Pages) e dominio personalizzato;
+  - checklist dopo la pubblicazione: installazione su iPhone e Android, prova offline, anteprima su WhatsApp, incolla su Firefox da provare a mano;
+  - tabella "se qualcosa non va" e promemoria dei comandi.
+- **Licenze:** controllando le librerie ho scoperto che il decoder HEIC (`heic-to` / libheif) è **LGPL-3.0**. Chi ridistribuisce il programma deve includere l'avviso di licenza e indicare dove trovare il codice sorgente. Ora il sito pubblica `third-party-licenses.txt`, generato da `npm run licenses` e rigenerato a ogni build, con le licenze di tutto il codice che arriva nel browser. Nella schermata iniziale c'è un piccolo link **"Licenze open source"**. Il decoder resta un file separato e non modificato, come richiede la LGPL. *(Non sono un avvocato: per un uso commerciale importante conviene un parere legale.)*
+
+### 24/09/2026 — T9.4 README ✅
+- `README.md` in inglese, con un riassunto anche in italiano: cosa fa l'app, avvio rapido, comandi, come funziona dentro (motore geometrico, stato, rendering condiviso, decodifica), struttura delle cartelle, licenze.
+- **Test finale Fase 9:** unitari 98/98 ✅ · **e2e 292 superati, 28 esclusi di proposito, 0 falliti** (5 browser). In più c'è il test sul link alle licenze.
+- **Scivolone (nella guida):** avevo scritto che il decoder HEIC si scarica "la prima volta che apri un HEIC". In realtà il service worker lo scarica in background **alla prima visita**. Frase corretta.

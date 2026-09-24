@@ -175,3 +175,15 @@
     transform: rotate(360deg);
   }
 }
+
+.legal {
+  color: var(--text-3);
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+}
+
+.legal:hover {
+  color: var(--text-2);
+}

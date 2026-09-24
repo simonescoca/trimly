@@ -76,6 +76,9 @@ export function EmptyState({ busyMessage, onChoose, onSample }: Props) {
             {t('empty.sample')}
           </Button>
         </div>
+        <a className={s.legal} href="/third-party-licenses.txt" target="_blank" rel="noreferrer">
+          {t('empty.licenses')}
+        </a>
       </div>
     </main>
   )

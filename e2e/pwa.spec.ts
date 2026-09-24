@@ -44,3 +44,12 @@ test('shares nicely: social preview tags and image', async ({ page, request }) =
   expect((await res.body()).length).toBeLessThan(300_000) // WhatsApp skips bigger previews
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image')
 })
+
+test('links to the open-source licences', async ({ page, request }) => {
+  await page.goto('/')
+  const href = await page.getByRole('link', { name: 'Open-source licences' }).getAttribute('href')
+  const text = await (await request.get(href!)).text()
+  expect(text).toContain('heic-to')
+  expect(text).toContain('GNU LESSER GENERAL PUBLIC LICENSE')
+  expect(text).toContain('react')
+})

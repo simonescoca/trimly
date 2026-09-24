@@ -19,6 +19,7 @@ export const it: Messages = {
   'empty.formats': 'JPG, PNG, WebP, HEIC, GIF, AVIF, TIFF, BMP, SVG',
   'empty.privacy': 'Le tue immagini non lasciano mai il tuo dispositivo.',
   'empty.sample': 'Prova con un’immagine di esempio',
+  'empty.licenses': 'Licenze open source',
   'empty.feature.free': 'Forma libera',
   'empty.feature.ratios': 'Proporzioni standard',
   'empty.feature.circle': 'Cerchio trasparente',
