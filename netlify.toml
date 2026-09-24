@@ -3,6 +3,9 @@
 [build]
   command = "npm run build"
   publish = "dist"
+  # Every production deploy costs credits: skip the build when a push only touches
+  # documentation, tests or editor settings (exit code 0 = "nothing to build").
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ':!*.md' ':!docs/' ':!e2e/' ':!.claude/' ':!playwright.config.ts' ':!src/**/*.test.ts'"
 
 [build.environment]
   NODE_VERSION = "24"

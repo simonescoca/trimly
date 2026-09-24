@@ -1,9 +1,15 @@
 # Come pubblicare Trimly
 
-> ✅ **Già pubblicato il 24/09/2026:** https://trimly-crop.netlify.app (progetto Netlify `trimly-crop`, caricamento manuale).
-> **Per aggiornarlo:** chiedi a Claude "aggiorna Trimly su Netlify". In alternativa, a mano: `SITE_URL=https://trimly-crop.netlify.app npm run build`, poi comprimi il *contenuto* di `dist` in uno zip e trascinalo nel riquadro "Already built it?" della pagina del progetto su Netlify. Dopo ogni aggiornamento, `npm run e2e:live` verifica il sito online.
-> **Codice su GitHub:** https://github.com/simonescoca/trimly (pubblico). Per la "Strada B" (aggiornamenti automatici) basta collegare questo repository al progetto `trimly-crop` su Netlify.
-> Nelle impostazioni del progetto il badge "Powered by Netlify" è **disattivato**: il suo script viene bloccato dalla nostra policy di sicurezza e generava errori.
+> ✅ **Già pubblicato:** https://trimly-crop.netlify.app · codice: https://github.com/simonescoca/trimly
+>
+> **Aggiornamenti automatici (attivi dal 24/09/2026):** il progetto Netlify `trimly-crop` è collegato al repository GitHub. **Ogni `git push` sul ramo `main` ricostruisce e ripubblica il sito da solo**, in circa 20 secondi. Non serve più trascinare cartelle.
+>
+> **Crediti Netlify (piano gratuito: 300 al mese):** ogni pubblicazione costa **15 crediti**, e anche il traffico ne consuma un po'. Per risparmiarli:
+> - `netlify.toml` salta il build quando un push tocca solo documenti (`*.md`, `docs/`), test (`e2e/`, `*.test.ts`) o impostazioni dell'editor. Quei push sono gratis;
+> - conviene raggruppare più modifiche in un solo push;
+> - `npm run e2e:live` verifica il sito online solo su Chrome, perché una corsa su 5 browser consuma circa 10 crediti di traffico.
+>
+> Il badge "Powered by Netlify" è **disattivato** nelle impostazioni del progetto: il suo script viene bloccato dalla nostra policy di sicurezza e generava errori.
 
 Trimly è un sito "statico": una cartella di file, senza server né database da gestire. Per metterlo online serve solo un servizio di hosting gratuito. Ti consiglio **Netlify**: è gratis, ha HTTPS incluso ed è il più semplice.
 
